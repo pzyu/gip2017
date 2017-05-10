@@ -6,6 +6,10 @@ public class Tile : MonoBehaviour {
 
     private int x, y, id;
     private byte orientation;
+    
+    public float rotation = 0.0f;
+    public Quaternion to = Quaternion.identity;
+    private float speed = 1000.0f;
 
     public enum TYPE {
         BLANK,
@@ -18,15 +22,20 @@ public class Tile : MonoBehaviour {
     
     private TYPE tileType = TYPE.BLANK;
 
+    private SpriteRenderer sr;
+
     public Sprite[] spriteArray = new Sprite[6];
 
     // Constructor
-    public Tile(int x, int y, int id,TYPE type)
+    public void Initialize (int x, int y, int id, int type)
     {
+        Debug.Log("Initializing new tile: " + id + " " + x + " " + y + " " + (TYPE)type);
         this.x = x;
         this.y = y;
         this.id = id;
-        SetType(type);
+        SetType((TYPE)type);
+        sr = GetComponent<SpriteRenderer>();
+        Debug.Log(sr);
     }
 
     // Use this for initialization
@@ -36,14 +45,16 @@ public class Tile : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, to, speed * Time.deltaTime);
+    }
 
     // Sets type in a less cryptic manner
     void SetType(TYPE type) {
         // No checks here :(
+        Debug.Log("Creating " + type.ToString());
         tileType = type;
-        GetComponent<SpriteRenderer>().sprite = spriteArray[(int)type];
+        Debug.Log("Current sprite: " + sr);
+        this.GetComponent<SpriteRenderer>().sprite = spriteArray[(int)type];
         switch(type) {
             case TYPE.BLANK:
                 orientation = 0x00; //00000000
@@ -77,14 +88,18 @@ public class Tile : MonoBehaviour {
         Debug.Log("Rotating Left");
         byte mask = 0xff;
         orientation = (byte)(((b << 2) | (b >> 6)) & mask);
-        transform.Rotate(0, 0, 90);
+
+        rotation += 90;
+        to = Quaternion.Euler(0.0f, 0.0f, rotation);
     }
 
     void RotateRight(byte b) {
         Debug.Log("Rotating Right");
         byte mask = 0xff;
         orientation = (byte)(((b >> 2) | (b << 6)) & mask);
-        transform.Rotate(0, 0, -90);
+        
+        rotation -= 90;
+        to = Quaternion.Euler(0.0f, 0.0f, rotation);
     }
 
     void PrintByte(byte b) {
@@ -134,5 +149,9 @@ public class Tile : MonoBehaviour {
 
     byte getOrientation() {
         return orientation;
+    }
+
+    private void OnMouseDown() {
+        RotateRight(orientation);
     }
 }

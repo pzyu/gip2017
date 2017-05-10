@@ -8,10 +8,13 @@ public class TileManager : MonoBehaviour {
     private int rows = 5;
     private int cols = 5;
 
-    private Tile[][] tileArray;
+    private GameObject[][] tileArray;
     private char[][] charArray;
+    private float tileSize;
 
     private string path = "../GIP2017GameJam/Assets/Maps/sample.txt";
+
+    public GameObject tilePrefab;
 
     /*
         0 - BLANK,
@@ -25,6 +28,7 @@ public class TileManager : MonoBehaviour {
     // Use this for initialization
     void Start () {
         InitializeCharArrayFromFile();
+        InitializeTileArray();
     }
 	
 	// Update is called once per frame
@@ -44,8 +48,21 @@ public class TileManager : MonoBehaviour {
         }
     }
 
+    // Reads from charArray and converts each one to the corresponding tile
     void InitializeTileArray() {
-        tileArray = new Tile[rows][];
-        
+        tileArray = new GameObject[rows][];
+
+        tileSize = tilePrefab.GetComponent<Renderer>().bounds.size.x;
+
+        for (int i = 0; i < rows; i++) {
+            tileArray[i] = new GameObject[cols];
+            for (int j = 0; j < cols; j++) {
+                char cur = charArray[i][j];
+                
+                // Instantiate then initialize
+                tileArray[i][j] = Instantiate(tilePrefab, new Vector3(tileSize * i, tileSize * j, 0), Quaternion.identity);
+                tileArray[i][j].GetComponent<Tile>().Initialize(i, j, i + j, int.Parse(cur.ToString()));
+            }
+        }
     }
 }
