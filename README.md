@@ -1,2 +1,4 @@
-# gip2017
-GIP Game Jam 2017
+# GIP Game Jam 2017
+## Anthropology Twisted Fossil
+
+###Ashelantis??
