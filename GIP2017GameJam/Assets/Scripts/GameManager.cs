@@ -68,12 +68,14 @@ public class GameManager : MonoBehaviour {
 		for (int i = 0; i < enemies.Length; i++) {
 			if (GetPlayerTile() == GetEnemyTile(enemies[i])) {
 				Debug.Log ("DIED");
-				SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
+				resetGame ();
 			}
 		}
 
 		return allHasMove; 
 	}
 
-	
+	public void resetGame() {
+		SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
+	}
 }

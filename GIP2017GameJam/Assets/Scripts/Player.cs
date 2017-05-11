@@ -30,16 +30,12 @@ public class Player : MonoBehaviour {
 			moveCoroutine = null; 
 			if (Input.GetKeyDown (KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) {
 				moveCoroutine = MoveUp (); 
-				canMove = false; 
 			} else if (Input.GetKeyDown (KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) {
-				moveCoroutine = MoveDown (); 
-				canMove = false; 
+				moveCoroutine = MoveDown ();  
 			} else if (Input.GetKeyDown (KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) {
-				moveCoroutine = MoveLeft (); 
-				canMove = false; 
+				moveCoroutine = MoveLeft ();
 			} else if (Input.GetKeyDown (KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) {
-				moveCoroutine = MoveRight (); 
-				canMove = false; 
+				moveCoroutine = MoveRight ();
 			}
 
 			if (moveCoroutine != null) {
@@ -56,6 +52,7 @@ public class Player : MonoBehaviour {
 			print (targetPosition);
 			transform.Translate (0.0f, tileSize, 0.0f);
 			updateCurrentTile (x, y);
+			canMove = false; 
 			yield return new WaitForSeconds(0.2f); 
 		}
 	}
@@ -67,6 +64,7 @@ public class Player : MonoBehaviour {
 			Vector3 targetPosition = transform.position + new Vector3(0.0f,-1 *tileSize,0.0f);
 			transform.Translate (0.0f,-1 *tileSize,0.0f);
 			updateCurrentTile (x, y);
+			canMove = false; 
 			yield return new WaitForSeconds(0.2f);
 		}
 	}
@@ -78,6 +76,7 @@ public class Player : MonoBehaviour {
 			Vector3 targetPosition = transform.position + new Vector3 (-tileSize, 0.0f, 0.0f);
 			transform.Translate (-tileSize, 0.0f, 0.0f);
 			updateCurrentTile (x, y);
+			canMove = false; 
 			yield return new WaitForSeconds(0.2f);
 		}
 	}
@@ -89,6 +88,7 @@ public class Player : MonoBehaviour {
 			Vector3 targetPosition = transform.position + new Vector3 ( tileSize, 0.0f, 0.0f);
 			transform.Translate (tileSize, 0.0f, 0.0f);
 			updateCurrentTile (x, y);
+			canMove = false; 
 			yield return new WaitForSeconds(0.2f);
 		}
 	}
@@ -99,5 +99,22 @@ public class Player : MonoBehaviour {
 		currentTile.UpdateAllNeighbours ();
 
 		//Debug.Log ("X:" + x + " Y:" + y + " " + currentTile.canMoveN () + " " + currentTile.canMoveE () + " " + currentTile.canMoveS () + " " + currentTile.canMoveW ());
+	}
+
+	public void RunMoveUp() {
+		StartCoroutine (MoveUp ());
+		canMove = false; 
+	}
+	public void RunMoveDown() {
+		StartCoroutine (MoveDown ());
+		canMove = false; 
+	}
+	public void RunMoveLeft() {
+		StartCoroutine (MoveLeft());
+		canMove = false; 
+	}
+	public void RunMoveRight() {
+		StartCoroutine (MoveRight ());
+		canMove = false; 
 	}
 }

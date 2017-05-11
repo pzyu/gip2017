@@ -29,27 +29,19 @@ public class Enemy : MonoBehaviour {
 	void Update () {
 		if (canMove) {
 			int moveType = Random.Range (0, 4);
-			moveCoroutine = null; 
 			if (moveType == 0 && currentTile.canMoveN()) {
-				moveCoroutine = MoveUp (); 
-				canMove = false; 
+				MoveUp ();
 			} else if (moveType == 1 && currentTile.canMoveS()) {
-				moveCoroutine = MoveDown (); 
-				canMove = false; 
+				MoveDown ();
 			} else if (moveType == 2 && currentTile.canMoveW()) {
-				moveCoroutine = MoveLeft (); 
-				canMove = false; 
+				MoveLeft ();
 			} else if (moveType == 3 && currentTile.canMoveE()) {
-				moveCoroutine = MoveRight (); 
-				canMove = false; 
-			}
-			if (moveCoroutine != null) {
-				StartCoroutine (moveCoroutine);
+				MoveRight (); 
 			}
 		}
 	}
 
-	IEnumerator MoveUp() {
+	void MoveUp() {
 		if (y > 0 || ((x == 0) && (y == 0))) {
 			y -= 1;
 			print (x + ", " + y);
@@ -57,40 +49,40 @@ public class Enemy : MonoBehaviour {
 			print (targetPosition);
 			transform.Translate (0.0f, tileSize, 0.0f);
 			updateCurrentTile (x, y);
-			yield return new WaitForSeconds(moveDelay); 
+			canMove = false;
 		}
 	}
 
-	IEnumerator MoveDown() {
+	void MoveDown() {
 		if (y < TileManager.rows || ((x == TileManager.cols) && (y == TileManager.rows))) {
 			y += 1;  
 			print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3(0.0f,-1 *tileSize,0.0f);
 			transform.Translate (0.0f,-1 *tileSize,0.0f);
 			updateCurrentTile (x, y);
-			yield return new WaitForSeconds(moveDelay);
+			canMove = false;
 		}
 	}
 
-	IEnumerator MoveRight() { 
+	void MoveRight() { 
 		if (x < TileManager.cols && (y <= TileManager.rows && y >= 0)) {
 			x += 1;
 			print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3 (-tileSize, 0.0f, 0.0f);
 			transform.Translate (-tileSize, 0.0f, 0.0f);
 			updateCurrentTile (x, y);
-			yield return new WaitForSeconds(moveDelay);
+			canMove = false;
 		}
 	}
 
-	IEnumerator MoveLeft() {
+	void MoveLeft() {
 		if (x > 0 && (y <= TileManager.rows && y >= 0)) {
 			x -= 1; 
 			print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3 ( tileSize, 0.0f, 0.0f);
 			transform.Translate (tileSize, 0.0f, 0.0f);
 			updateCurrentTile (x, y);
-			yield return new WaitForSeconds(moveDelay);
+			canMove = false;
 		}
 	}
 

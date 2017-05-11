@@ -26,7 +26,7 @@ public class Tile : MonoBehaviour {
 
     private SpriteRenderer sr;
 	public Tile[] tileNeighbours = new Tile[4]; // NESW
-	private bool[] connectedNeighbours = new bool[4]; // NESW
+	public bool[] connectedNeighbours = new bool[4]; // NESW
 
     public Sprite[] spriteArray = new Sprite[6];
 
