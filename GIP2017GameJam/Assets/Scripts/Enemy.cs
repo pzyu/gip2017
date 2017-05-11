@@ -10,6 +10,7 @@ public class Enemy : MonoBehaviour {
 	// tile size to help with translation; 
 	public float tileSize = 5.0f;
 	public bool canMove;
+	public float moveDelay = 0.5f;
 	private IEnumerator moveCoroutine;
 	private TileManager tileManager; 
 
@@ -49,47 +50,47 @@ public class Enemy : MonoBehaviour {
 	}
 
 	IEnumerator MoveUp() {
-		if (currentTile.canMoveN() && (y > 0 || ((x == 0) && (y == 0)))) {
+		if (y > 0 || ((x == 0) && (y == 0))) {
 			y -= 1;
 			print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3(0.0f,tileSize,0.0f); 
 			print (targetPosition);
 			transform.Translate (0.0f, tileSize, 0.0f);
 			updateCurrentTile (x, y);
-			yield return new WaitForSeconds(0.2f); 
+			yield return new WaitForSeconds(moveDelay); 
 		}
 	}
 
 	IEnumerator MoveDown() {
-		if (currentTile.canMoveS() && (y < 4 || ((x == 4) && (y == 4)))) {
+		if (y < TileManager.rows || ((x == TileManager.cols) && (y == TileManager.rows))) {
 			y += 1;  
 			print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3(0.0f,-1 *tileSize,0.0f);
 			transform.Translate (0.0f,-1 *tileSize,0.0f);
 			updateCurrentTile (x, y);
-			yield return new WaitForSeconds(0.2f);
+			yield return new WaitForSeconds(moveDelay);
 		}
 	}
 
 	IEnumerator MoveRight() { 
-		if (currentTile.canMoveE() && (x < 4 && (y <= 4 && y >= 0))) {
+		if (x < TileManager.cols && (y <= TileManager.rows && y >= 0)) {
 			x += 1;
 			print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3 (-tileSize, 0.0f, 0.0f);
 			transform.Translate (-tileSize, 0.0f, 0.0f);
 			updateCurrentTile (x, y);
-			yield return new WaitForSeconds(0.2f);
+			yield return new WaitForSeconds(moveDelay);
 		}
 	}
 
 	IEnumerator MoveLeft() {
-		if (currentTile.canMoveW() && (x > 0 && (y <= 4 && y >= 0))) {
+		if (x > 0 && (y <= TileManager.rows && y >= 0)) {
 			x -= 1; 
 			print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3 ( tileSize, 0.0f, 0.0f);
 			transform.Translate (tileSize, 0.0f, 0.0f);
 			updateCurrentTile (x, y);
-			yield return new WaitForSeconds(0.2f);
+			yield return new WaitForSeconds(moveDelay);
 		}
 	}
 

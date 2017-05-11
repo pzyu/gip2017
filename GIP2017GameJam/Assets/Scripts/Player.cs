@@ -61,7 +61,7 @@ public class Player : MonoBehaviour {
 	}
 
 	IEnumerator MoveDown() {
-		if (currentTile.canMoveS() && (y < 4 || ((x == 4) && (y == 4)))) {
+		if (currentTile.canMoveS() && (y < TileManager.rows || ((x == TileManager.cols) && (y == TileManager.rows)))) {
 			y += 1;  
 			print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3(0.0f,-1 *tileSize,0.0f);
@@ -72,7 +72,7 @@ public class Player : MonoBehaviour {
 	}
 
 	IEnumerator MoveRight() { 
-		if (currentTile.canMoveE() && (x < 4 && (y <= 4 && y >= 0))) {
+		if (currentTile.canMoveE() && (x < TileManager.cols && (y <= TileManager.rows && y >= 0))) {
 			x += 1;
 			print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3 (-tileSize, 0.0f, 0.0f);
@@ -83,7 +83,7 @@ public class Player : MonoBehaviour {
 	}
 
 	IEnumerator MoveLeft() {
-		if (currentTile.canMoveW() && (x > 0 && (y <= 4 && y >= 0))) {
+		if (currentTile.canMoveW() && (x > 0 && (y <= TileManager.rows && y >= 0))) {
 			x -= 1; 
 			print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3 ( tileSize, 0.0f, 0.0f);
