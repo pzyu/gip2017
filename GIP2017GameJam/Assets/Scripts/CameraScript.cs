@@ -43,7 +43,8 @@ public class CameraScript : MonoBehaviour
         {
             tileManager.RotateSelection();
         }
-
+        
+        // Right mouse click
         if (Input.GetMouseButtonDown(1))
         {
             RaycastHit hit;
@@ -58,6 +59,7 @@ public class CameraScript : MonoBehaviour
                     //Debug.Log("Hits at: " + hit.point);
 
                     Tile selectedTile = hit.transform.GetComponent<Tile>();
+                    // TODO: Check if player is on tile
                     selectedTile.ChooseTile();
                 }
             }

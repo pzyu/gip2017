@@ -128,9 +128,15 @@ public class TileManager : MonoBehaviour {
 
 				Debug.Log("First: " + firstTile.getX() + "," + firstTile.getY());
 				Debug.Log("Second: " + secondTile.getX() + "," + secondTile.getY());
-                
+
                 // If it forms a square
-                if (System.Math.Abs(firstTile.getX() - secondTile.getX()) == 1 && System.Math.Abs(firstTile.getY() - fourthTile.getY()) == 1)
+                bool horiz = System.Math.Abs(firstTile.getX() - secondTile.getX()) == 1 && System.Math.Abs(firstTile.getY() - secondTile.getY()) == 0 &&
+                             System.Math.Abs(firstTile.getX() - fourthTile.getX()) == 0 && System.Math.Abs(firstTile.getY() - fourthTile.getY()) == 1;
+
+                bool vert = System.Math.Abs(firstTile.getX() - secondTile.getX()) == 0 && System.Math.Abs(firstTile.getY() - secondTile.getY()) == 1 &&
+                             System.Math.Abs(firstTile.getX() - fourthTile.getX()) == 1 && System.Math.Abs(firstTile.getY() - fourthTile.getY()) == 0;
+
+                if (horiz || vert)
                 {
                     // 1 in 2
                     firstTile.transform.position = secondTile.transform.position;
@@ -164,94 +170,6 @@ public class TileManager : MonoBehaviour {
                     fourthTile.setX(tempX);
                     fourthTile.setY(tempY);
                 }
-                /*
-				// If both Y's are same level
-				if (firstTile.getY() == secondTile.getY())
-				{
-					// If first is left of second, then rotate clockwise
-					if (firstTile.getX() - secondTile.getX() == -1 && firstTile.getY() - fourthTile.getY() == -1)
-					{
-						// 1 in 2
-						firstTile.transform.position = secondTile.transform.position;
-
-						// 2 in 3
-						secondTile.transform.position = thirdTile.transform.position;
-
-						// 3 in 4
-						thirdTile.transform.position = fourthTile.transform.position;
-
-						// 4 in 1
-						fourthTile.transform.position = tempPos;
-
-						Debug.Log("Replacing " + firstTile.getX() + "," + firstTile.getY() + " with " + secondTile.getX() + "," + secondTile.getY());
-						tileArray[firstTile.getX(), firstTile.getY()] = tileArray[secondTile.getX(),secondTile.getY()];
-						firstTile.setX(secondTile.getX());
-						firstTile.setY(secondTile.getY());
-
-						Debug.Log("Replacing " + secondTile.getX() + "," + secondTile.getY() + " with " + thirdTile.getX() + "," + thirdTile.getY());
-						tileArray[secondTile.getX(), secondTile.getY()] = tileArray[thirdTile.getX(),thirdTile.getY()];
-						secondTile.setX(thirdTile.getX());
-						secondTile.setY(thirdTile.getY());
-
-						Debug.Log("Replacing " + thirdTile.getX() + "," + thirdTile.getY() + " with " + fourthTile.getX() + "," + fourthTile.getY());
-						tileArray[thirdTile.getX(), thirdTile.getY()] = tileArray[fourthTile.getX(), fourthTile.getY()];
-						thirdTile.setX(fourthTile.getX());
-						thirdTile.setY(fourthTile.getY());
-
-						Debug.Log("Replacing " + fourthTile.getX() + "," + fourthTile.getY() + " with " + tempX + "," + tempY);
-						tileArray[fourthTile.getX(), fourthTile.getY()] = tileArray[tempX, tempY];
-						fourthTile.setX(tempX);
-						fourthTile.setY(tempY);
-					}
-
-					else if (firstTile.getX() - secondTile.getX() == 1 && firstTile.getY() - fourthTile.getY() == -1)
-					{
-                        // Otherwise, rotate anti clockwise
-                        // 1 in 2
-                        firstTile.transform.position = secondTile.transform.position;
-
-                        // 2 in 3
-                        secondTile.transform.position = thirdTile.transform.position;
-
-                        // 3 in 4
-                        thirdTile.transform.position = fourthTile.transform.position;
-
-                        // 4 in 1
-                        fourthTile.transform.position = tempPos;
-
-                        Debug.Log("Replacing " + firstTile.getX() + "," + firstTile.getY() + " with " + secondTile.getX() + "," + secondTile.getY());
-                        tileArray[firstTile.getX(), firstTile.getY()] = tileArray[secondTile.getX(), secondTile.getY()];
-                        firstTile.setX(secondTile.getX());
-                        firstTile.setY(secondTile.getY());
-
-                        Debug.Log("Replacing " + secondTile.getX() + "," + secondTile.getY() + " with " + thirdTile.getX() + "," + thirdTile.getY());
-                        tileArray[secondTile.getX(), secondTile.getY()] = tileArray[thirdTile.getX(), thirdTile.getY()];
-                        secondTile.setX(thirdTile.getX());
-                        secondTile.setY(thirdTile.getY());
-
-                        Debug.Log("Replacing " + thirdTile.getX() + "," + thirdTile.getY() + " with " + fourthTile.getX() + "," + fourthTile.getY());
-                        tileArray[thirdTile.getX(), thirdTile.getY()] = tileArray[fourthTile.getX(), fourthTile.getY()];
-                        thirdTile.setX(fourthTile.getX());
-                        thirdTile.setY(fourthTile.getY());
-
-                        Debug.Log("Replacing " + fourthTile.getX() + "," + fourthTile.getY() + " with " + tempX + "," + tempY);
-                        tileArray[fourthTile.getX(), fourthTile.getY()] = tileArray[tempX, tempY];
-                        fourthTile.setX(tempX);
-                        fourthTile.setY(tempY);
-                    }
-				}
-				else if (firstTile.getX() == secondTile.getX())
-				{
-					// If first is top of second, then rotate clockwise
-					if (firstTile.getY() < secondTile.getY())
-					{
-
-					} else
-					{
-						// Otherwise, rotate anti clockwise
-					}
-				}
-                */
 
 				// Now reset
 				ResetSelection();
@@ -261,7 +179,7 @@ public class TileManager : MonoBehaviour {
 
 	public void SelectTile(Tile tile) {
 		if (selectionList.Count < 4) {
-			// TODO: Connectivity check
+			// TODO: Check tile selection and player
 			selectionList.Add(tile);
 			tile.Highlight();
 		}
