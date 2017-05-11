@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour {
 
-    private int x, y, id;
+    private int x, y;
     private byte orientation;
     
     public float rotation = 0.0f;
@@ -27,15 +27,33 @@ public class Tile : MonoBehaviour {
     public Sprite[] spriteArray = new Sprite[6];
 
     // Constructor
-    public void Initialize (int x, int y, int id, int type)
-    {
-        Debug.Log("Initializing new tile: " + id + " " + x + " " + y + " " + (TYPE)type);
+	public void Initialize (int x, int y, int type, int rotation) {
+        //Debug.Log("Initializing new tile: " + x + " " + y + " " + (TYPE)type);
         this.x = x;
         this.y = y;
-        this.id = id;
-        SetType((TYPE)type);
+		this.to = Quaternion.Euler (0.0f, 0.0f, rotation * 90);
+		SetType((TYPE)type);
+
+		switch (rotation) {
+			case 0:
+				break; // 12o-clock
+			case 1:
+				RotateLeft(orientation); // 9o-clock
+				break;
+			case 2:
+				RotateLeft(orientation); // 6o-clock
+				RotateLeft(orientation);
+				break;
+			case 3:
+				RotateRight(orientation); // 3-oclock
+				break;
+			default:
+				Debug.Log("Invalid orientation. Must be 0 to 3");
+				break;
+		}
+
         sr = GetComponent<SpriteRenderer>();
-        Debug.Log(sr);
+        //Debug.Log(sr);
     }
 
     // Use this for initialization
@@ -50,11 +68,10 @@ public class Tile : MonoBehaviour {
 
     // Sets type in a less cryptic manner
     void SetType(TYPE type) {
-        // No checks here :(
-        Debug.Log("Creating " + type.ToString());
         tileType = type;
-        Debug.Log("Current sprite: " + sr);
+        //Debug.Log("Current sprite: " + sr);
         this.GetComponent<SpriteRenderer>().sprite = spriteArray[(int)type];
+
         switch(type) {
             case TYPE.BLANK:
                 orientation = 0x00; //00000000
@@ -71,8 +88,8 @@ public class Tile : MonoBehaviour {
             case TYPE.CORNER:
                 orientation = 0x3C; //00111100
                 break;
-            case TYPE.DEAD:         //11000000
-                orientation = 0xC0;
+            case TYPE.DEAD:
+				orientation = 0xC0; //11000000
                 break;
             default:
                 Debug.Log("Invalid type");
@@ -84,61 +101,66 @@ public class Tile : MonoBehaviour {
         return (b & (1 << bitNumber)) != 0 ? 1 : 0;
     }
 
-    void RotateLeft(byte b) {
-        Debug.Log("Rotating Left");
+	// Updates the byte representation of the tile type
+	// according to its orientation
+	// Anti-clockwise
+	void RotateLeft(byte b) {
         byte mask = 0xff;
         orientation = (byte)(((b << 2) | (b >> 6)) & mask);
 
-        rotation += 90;
-        to = Quaternion.Euler(0.0f, 0.0f, rotation);
+		rotation += 90;
+		to = Quaternion.Euler (0.0f, 0.0f, rotation);
     }
 
-    void RotateRight(byte b) {
-        Debug.Log("Rotating Right");
+	// Updates the byte representation of the tile type
+	// according to its orientation
+	// Clockwise
+	void RotateRight(byte b) {
         byte mask = 0xff;
         orientation = (byte)(((b >> 2) | (b << 6)) & mask);
         
-        rotation -= 90;
-        to = Quaternion.Euler(0.0f, 0.0f, rotation);
+		rotation -= 90;
+		to = Quaternion.Euler (0.0f, 0.0f, rotation);
     }
 
     void PrintByte(byte b) {
         string byteToPrint = "";
-        for (int i = 7; i >= 0; i--)
-        {
+        for (int i = 7; i >= 0; i--) {
             byteToPrint += GetBit(b, i).ToString();
         }
         Debug.Log(byteToPrint);
     }
 
-    // Getters
+	// Get X coordinate of Tile (position)
     int getX() {
         return x;
     }
 
+	// Get Y coordinate of Tile (position)
     int getY() {
         return y;
     }
 
+	// Returns true if there is a path in this direction
     bool getN() {
         byte mask = 0xC0;
         return (orientation & mask) != 0;
     }
 
-    bool getE()
-    {
+	// Returns true if there is a path in this direction
+    bool getE() {
         byte mask = 0x30;
         return (orientation & mask) != 0;
     }
 
-    bool getS()
-    {
+	// Returns true if there is a path in this direction
+    bool getS() {
         byte mask = 0x0C;
         return (orientation & mask) != 0;
     }
 
-    bool getW()
-    {
+	// Returns true if there is a path in this direction
+    bool getW() {
         byte mask = 0x03;
         return (orientation & mask) != 0;
     }
