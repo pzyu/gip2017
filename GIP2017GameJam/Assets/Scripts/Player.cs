@@ -16,7 +16,7 @@ public class Player : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		canMove = true; 
+		canMove = true;
 		tileManager = GameObject.Find ("TileManager").GetComponent<TileManager> ();
 		Vector3 startingPosition = tileManager.getFirstTilePosition();
 		transform.position = new Vector3 (startingPosition.x, startingPosition.y, transform.position.z);
@@ -31,16 +31,12 @@ public class Player : MonoBehaviour {
 			moveCoroutine = null; 
 			if (Input.GetKeyDown (KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) {
 				moveCoroutine = MoveUp (); 
-				canMove = false; 
 			} else if (Input.GetKeyDown (KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) {
 				moveCoroutine = MoveDown (); 
-				canMove = false; 
 			} else if (Input.GetKeyDown (KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) {
 				moveCoroutine = MoveLeft (); 
-				canMove = false; 
 			} else if (Input.GetKeyDown (KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) {
 				moveCoroutine = MoveRight (); 
-				canMove = false; 
 			}
 
 			if (moveCoroutine != null) {
@@ -57,6 +53,7 @@ public class Player : MonoBehaviour {
 			print (targetPosition);
 			transform.Translate (0.0f, tileSize, 0.0f);
 			updateCurrentTile (x, y);
+			canMove = false; 
             yield return new WaitForSeconds(0.2f); 
 		}
 	}
@@ -73,6 +70,7 @@ public class Player : MonoBehaviour {
 			Vector3 targetPosition = transform.position + new Vector3(0.0f,-1 *tileSize,0.0f);
 			transform.Translate (0.0f,-1 *tileSize,0.0f);
 			updateCurrentTile (x, y);
+			canMove = false; 
 			yield return new WaitForSeconds(0.2f);
 		}
 	}
@@ -84,6 +82,7 @@ public class Player : MonoBehaviour {
 			Vector3 targetPosition = transform.position + new Vector3 (-tileSize, 0.0f, 0.0f);
 			transform.Translate (-tileSize, 0.0f, 0.0f);
 			updateCurrentTile (x, y);
+			canMove = false; 
 			yield return new WaitForSeconds(0.2f);
 		}
 	}
@@ -95,6 +94,7 @@ public class Player : MonoBehaviour {
 			Vector3 targetPosition = transform.position + new Vector3 ( tileSize, 0.0f, 0.0f);
 			transform.Translate (tileSize, 0.0f, 0.0f);
 			updateCurrentTile (x, y);
+			canMove = false; 
 			yield return new WaitForSeconds(0.2f);
 		}
 	}
