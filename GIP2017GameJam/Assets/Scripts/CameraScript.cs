@@ -56,13 +56,13 @@ public class CameraScript : MonoBehaviour
 				if (hit.collider != null)
 				{
 					Debug.DrawLine(transform.position, hit.point, Color.green);
-					//Debug.Log(hit.transform.GetComponent<Tile>().getType());
-					//Debug.Log("Hits at: " + hit.point);
-
-					//Tile selectedTile = hit.transform.GetComponent<Tile>();
-					// TODO: Check if player is on tile
-					//selectedTile.ChooseTile();
 				}
+
+                if (hit.collider.tag == "Tile")
+                {
+                    Tile selectedTile = hit.transform.GetComponent<Tile>();
+                    selectedTile.RotateRightAndUpdate();
+                }
 
 
                 if (hit.collider.tag == "Pivot")
@@ -82,6 +82,12 @@ public class CameraScript : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
+                if (hit.collider.tag == "Tile")
+                {
+                    Tile selectedTile = hit.transform.GetComponent<Tile>();
+                    selectedTile.RotateLeftAndUpdate();
+                }
+
                 if (hit.collider.tag == "Pivot")
                 {
                     Debug.DrawLine(transform.position, hit.point, Color.yellow);

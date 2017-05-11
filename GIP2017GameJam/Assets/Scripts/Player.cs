@@ -99,6 +99,6 @@ public class Player : MonoBehaviour {
 		currentTile.UpdateConnectedNeighbours ();
 		currentTile.UpdateAllNeighbours ();
 
-		//Debug.Log ("X:" + x + " Y:" + y + " " + currentTile.canMoveN () + " " + currentTile.canMoveE () + " " + currentTile.canMoveS () + " " + currentTile.canMoveW ());
+		Debug.Log ("X:" + y + " Y:" + x + " " + currentTile.canMoveN () + " " + currentTile.canMoveE () + " " + currentTile.canMoveS () + " " + currentTile.canMoveW ());
 	}
 }

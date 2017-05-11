@@ -135,6 +135,7 @@ public class TileManager : MonoBehaviour {
 
         Vector3 tempPos = new Vector3(fourthTile.transform.position.x, fourthTile.transform.position.y, fourthTile.transform.position.z);
 
+        /*
         // 4 go to 1
         fourthTile.transform.position = firstTile.transform.position;
 
@@ -146,8 +147,14 @@ public class TileManager : MonoBehaviour {
 
         // 3 go to 4
         thirdTile.transform.position = tempPos;
-        
-        
+        */
+
+        fourthTile.setPosition(firstTile.transform.position);
+        firstTile.setPosition(secondTile.transform.position);
+        secondTile.setPosition(thirdTile.transform.position);
+        thirdTile.setPosition(tempPos);
+
+
         Debug.Log("Before rotation");
         Debug.Log(secondTile.getX() + "," + secondTile.getY() + " | " + firstTile.getX() + "," + firstTile.getY());
         Debug.Log(thirdTile.getX() + "," + thirdTile.getY() + " | " + fourthTile.getX() + "," + fourthTile.getY());
@@ -222,6 +229,8 @@ public class TileManager : MonoBehaviour {
 
 		Tile[] tileNeighbours = new Tile[4];
 
+        Debug.Log("Trying to update: " + x + ", " + y);
+
 		if (x == 0) {
 			tileNeighbours [3] = null;
 			tileNeighbours [1] = tileArray[x + 1, y].GetComponent<Tile>();
@@ -262,6 +271,7 @@ public class TileManager : MonoBehaviour {
         int tempX = firstTile.getX();
         int tempY = firstTile.getY();
 
+        /*
         // 1 go to 2
         firstTile.transform.position = secondTile.transform.position;
 
@@ -273,6 +283,12 @@ public class TileManager : MonoBehaviour {
 
         // 4 go to 1
         fourthTile.transform.position = tempPos;
+        */
+
+        firstTile.setPosition(secondTile.transform.position);
+        secondTile.setPosition(thirdTile.transform.position);
+        thirdTile.setPosition(fourthTile.transform.position);
+        fourthTile.setPosition(tempPos);
 
         /*
         Debug.Log("Before rotation");
@@ -298,10 +314,10 @@ public class TileManager : MonoBehaviour {
         thirdTile = tileArray[i + 1, j + 1].GetComponent<Tile>();
         fourthTile = tileArray[i + 1, j].GetComponent<Tile>();
 
-        Debug.Log("After rotation");
+        /*Debug.Log("After rotation");
         Debug.Log(firstTile.getX() + "," + firstTile.getY() + " | " + secondTile.getX() + "," + secondTile.getY());
         Debug.Log(fourthTile.getX() + "," + fourthTile.getY() + " | " + thirdTile.getX() + "," + thirdTile.getY());
-        
+        */
 		foreach (Tile tile in getTileNeighbours(firstTile)) {
 			if (tile != null) tile.UpdateTileNeighbours (getTileNeighbours (tile));
 		}
