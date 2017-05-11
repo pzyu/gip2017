@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System;
 using UnityEngine;
 
 public class TileManager : MonoBehaviour {
@@ -26,7 +27,7 @@ public class TileManager : MonoBehaviour {
     */
 
     // Use this for initialization
-    void Start () {
+    void Awake () {
         InitializeCharArrayFromFile();
         InitializeTileArray();
     }
@@ -42,7 +43,8 @@ public class TileManager : MonoBehaviour {
         string[] result = File.ReadAllLines(path);
         charArray = new char[result[0].Length][];
         for (int i = 0; i < result.Length; i++) {
-            char[] tempArr = result[i].ToCharArray();
+			char[] tempArr = result[i].ToCharArray();
+			Array.Reverse (tempArr);
             charArray[i] = tempArr;
             Debug.Log(new string(tempArr));
         }
@@ -65,4 +67,12 @@ public class TileManager : MonoBehaviour {
             }
         }
     }
+
+	public Vector3 getFirstTilePosition(){
+		return tileArray[0][4].transform.position;
+	}
+
+	public float getTileSize() {
+		return tileSize;
+	}
 }
