@@ -77,6 +77,11 @@ public class TileManager : MonoBehaviour {
             }
         }
 
+        Instantiate(tilePrefab, new Vector3(-tileSize * 0, -tileSize * -1, 0), Quaternion.Euler(0.0f, 0.0f, 0.0f));
+        Instantiate(tilePrefab, new Vector3(-tileSize * 4, -tileSize * 5, 0), Quaternion.Euler(0.0f, 0.0f, 0.0f));
+        //InstantiateTile(4, 5, 2);
+
+        /*
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 				if (i - 1 < 0) {
@@ -103,7 +108,7 @@ public class TileManager : MonoBehaviour {
 					tileArray[i, j].GetComponent<Tile>().tileNeighbours[3] = tileArray[i, j - 1].GetComponent<Tile>();
 				}
 			}
-		}
+		}*/
 
         RefreshAllTiles();
     }

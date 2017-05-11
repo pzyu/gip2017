@@ -62,6 +62,11 @@ public class Player : MonoBehaviour {
 	}
 
 	IEnumerator MoveDown() {
+        if (x == TileManager.rows && y == TileManager.rows)
+        {
+            Debug.Log("Win!");
+        }
+
 		if (currentTile.canMoveS() && (y < TileManager.rows || ((x == TileManager.cols) && (y == TileManager.rows)))) {
 			y += 1;  
 			//print (x + ", " + y);

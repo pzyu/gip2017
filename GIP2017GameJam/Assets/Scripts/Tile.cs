@@ -74,6 +74,8 @@ public class Tile : MonoBehaviour {
     void Start () {
         //Debug.Log(getN() + " " + getE() + " " + getS() + " " + getW());
         audioSource = GetComponent<AudioSource>();
+
+        targetPos = transform.position;
     }
 	
 	// Update is called once per frame
