@@ -50,7 +50,6 @@ public class TileManager : MonoBehaviour {
 		intArray = new int[result.Length, result[0].Length];
 		for (int i = 0; i < result.Length; i++) {
 			char[] tempArr = result[i].ToCharArray();
-			System.Array.Reverse (tempArr);
 			for (int j = 0; j < result [i].Length; j++) {
 				intArray[i, j] = int.Parse(tempArr[j].ToString());
 			}
@@ -98,8 +97,8 @@ public class TileManager : MonoBehaviour {
     }
 
 	private void InstantiateTile(int i, int j, int type) {
-		int rotation = Random.Range (0, 4);
-		tileArray[i, j] = Instantiate(tilePrefab, new Vector3(tileSize * i, tileSize * j, 0), Quaternion.Euler(0.0f, 0.0f, rotation * 90));
+		int rotation = 0;
+		tileArray[i, j] = Instantiate(tilePrefab, new Vector3(-tileSize * j, -tileSize * i, 0), Quaternion.Euler(0.0f, 0.0f, rotation * 90));
 		tileArray[i, j].GetComponent<Tile>().Initialize(i, j, type, rotation);
 	}
 

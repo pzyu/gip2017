@@ -88,7 +88,7 @@ public class Tile : MonoBehaviour {
                 orientation = 0x3F; //00111111
                 break;
             case TYPE.CORNER:
-                orientation = 0x3C; //00111100
+                orientation = 0x0F; //11110000
                 break;
             case TYPE.DEAD:
 				orientation = 0xC0; //11000000
@@ -110,7 +110,7 @@ public class Tile : MonoBehaviour {
         byte mask = 0xff;
         orientation = (byte)(((b << 2) | (b >> 6)) & mask);
 
-		rotation += 90;
+		rotation -= 90;
 		to = Quaternion.Euler (0.0f, 0.0f, rotation);
     }
 
@@ -121,7 +121,7 @@ public class Tile : MonoBehaviour {
         byte mask = 0xff;
         orientation = (byte)(((b >> 2) | (b << 6)) & mask);
         
-		rotation -= 90;
+		rotation += 90;
 		to = Quaternion.Euler (0.0f, 0.0f, rotation);
     }
 
@@ -187,8 +187,7 @@ public class Tile : MonoBehaviour {
 		connectedNeighbours[1] = getE() && tileNeighbours[1] != null && tileNeighbours[1].getW();
 		connectedNeighbours[2] = getS() && tileNeighbours[2] != null && tileNeighbours[2].getN();
 		connectedNeighbours[3] = getW() && tileNeighbours[3] != null && tileNeighbours[3].getE();
-		Debug.Log("NN:" + (tileNeighbours[0] != null) + "EE:" + (tileNeighbours[1] != null) + "SS:" + (tileNeighbours[2] != null) + "WW:" + (tileNeighbours[3] != null));
-		Debug.Log("N:" + connectedNeighbours[0] + "E:" + connectedNeighbours[1] + "S:" + connectedNeighbours[2] + "W:" + connectedNeighbours[3]);
+		Debug.Log ("N:" + connectedNeighbours[0] + " E:" + connectedNeighbours[1] + " S:" + connectedNeighbours[2] + " W:" + connectedNeighbours[3]);
 	}
 
 	public bool canMoveN() {
