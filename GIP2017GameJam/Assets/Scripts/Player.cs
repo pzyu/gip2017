@@ -22,7 +22,7 @@ public class Player : MonoBehaviour {
 		transform.position = new Vector3 (startingPosition.x, startingPosition.y, transform.position.z);
 		tileSize = tileManager.getTileSize ();
 		updateCurrentTile (x, y);
-		// Update connected neighbours
+        // Update connected neighbours
 	}
 	
 	// Update is called once per frame
@@ -52,19 +52,19 @@ public class Player : MonoBehaviour {
 	IEnumerator MoveUp() {
 		if (currentTile.canMoveN() && (y > 0 || ((x == 0) && (y == 0)))) {
 			y -= 1;
-			print (x + ", " + y);
+			//print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3(0.0f,tileSize,0.0f); 
 			print (targetPosition);
 			transform.Translate (0.0f, tileSize, 0.0f);
 			updateCurrentTile (x, y);
-			yield return new WaitForSeconds(0.2f); 
+            yield return new WaitForSeconds(0.2f); 
 		}
 	}
 
 	IEnumerator MoveDown() {
 		if (currentTile.canMoveS() && (y < TileManager.rows || ((x == TileManager.cols) && (y == TileManager.rows)))) {
 			y += 1;  
-			print (x + ", " + y);
+			//print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3(0.0f,-1 *tileSize,0.0f);
 			transform.Translate (0.0f,-1 *tileSize,0.0f);
 			updateCurrentTile (x, y);
@@ -75,7 +75,7 @@ public class Player : MonoBehaviour {
 	IEnumerator MoveRight() { 
 		if (currentTile.canMoveE() && (x < TileManager.cols && (y <= TileManager.rows && y >= 0))) {
 			x += 1;
-			print (x + ", " + y);
+			//print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3 (-tileSize, 0.0f, 0.0f);
 			transform.Translate (-tileSize, 0.0f, 0.0f);
 			updateCurrentTile (x, y);
@@ -86,7 +86,7 @@ public class Player : MonoBehaviour {
 	IEnumerator MoveLeft() {
 		if (currentTile.canMoveW() && (x > 0 && (y <= TileManager.rows && y >= 0))) {
 			x -= 1; 
-			print (x + ", " + y);
+			//print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3 ( tileSize, 0.0f, 0.0f);
 			transform.Translate (tileSize, 0.0f, 0.0f);
 			updateCurrentTile (x, y);
@@ -96,9 +96,13 @@ public class Player : MonoBehaviour {
 
 	void updateCurrentTile(int x, int y) {
 		currentTile = tileManager.obtainTile (y, x);
-		currentTile.UpdateConnectedNeighbours ();
-		currentTile.UpdateAllNeighbours ();
+        tileManager.playerTile = currentTile;
+		//currentTile.UpdateConnectedNeighbours ();
+		//currentTile.UpdateAllNeighbours ();
 
-		Debug.Log ("X:" + y + " Y:" + x + " " + currentTile.canMoveN () + " " + currentTile.canMoveE () + " " + currentTile.canMoveS () + " " + currentTile.canMoveW ());
+
+        tileManager.RefreshAllTiles();
+
+        //Debug.Log ("X:" + x + " Y:" + y + " " + currentTile.canMoveN () + " " + currentTile.canMoveE () + " " + currentTile.canMoveS () + " " + currentTile.canMoveW ());
 	}
 }

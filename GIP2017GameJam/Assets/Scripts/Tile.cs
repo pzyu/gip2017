@@ -217,10 +217,10 @@ public class Tile : MonoBehaviour {
 	}
 
 	public void UpdateConnectedNeighbours() {
-		connectedNeighbours[0] = getN() && tileNeighbours[0] != null && tileNeighbours[0].getS();
-		connectedNeighbours[1] = getE() && tileNeighbours[1] != null && tileNeighbours[1].getW();
-		connectedNeighbours[2] = getS() && tileNeighbours[2] != null && tileNeighbours[2].getN();
-		connectedNeighbours[3] = getW() && tileNeighbours[3] != null && tileNeighbours[3].getE();
+		connectedNeighbours[3] = getN() && tileNeighbours[3] != null && tileNeighbours[3].getS();
+		connectedNeighbours[2] = getE() && tileNeighbours[2] != null && tileNeighbours[2].getW();
+		connectedNeighbours[1] = getS() && tileNeighbours[1] != null && tileNeighbours[1].getN();
+		connectedNeighbours[0] = getW() && tileNeighbours[0] != null && tileNeighbours[0].getE();
 	}
 
 	public void UpdateAllNeighbours() {
@@ -232,19 +232,19 @@ public class Tile : MonoBehaviour {
 	}
 
 	public bool canMoveN() {
-		return connectedNeighbours[0];
+		return connectedNeighbours[3];
 	}
 
 	public bool canMoveE() {
-		return connectedNeighbours[1];
-	}
-
-	public bool canMoveS() {
 		return connectedNeighbours[2];
 	}
 
+	public bool canMoveS() {
+		return connectedNeighbours[1];
+	}
+
 	public bool canMoveW() {
-		return connectedNeighbours[3];
+		return connectedNeighbours[0];
 	}
 
 	private void OnMouseDown() {

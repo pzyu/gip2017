@@ -28,6 +28,9 @@ public class TileManager : MonoBehaviour {
 	private ArrayList selectionList = new ArrayList();
 	private bool canRotate = true;
 
+    public Tile playerTile;
+    public Tile enemyTile;
+
     /*
         0 - BLANK,
         1 - PIPE,
@@ -101,6 +104,8 @@ public class TileManager : MonoBehaviour {
 				}
 			}
 		}
+
+        RefreshAllTiles();
     }
 
 	private void InstantiateTile(int i, int j, int type) {
@@ -125,11 +130,22 @@ public class TileManager : MonoBehaviour {
 
     public void RotateLeft(int j, int i)
     {
-
         Tile firstTile = tileArray[i, j + 1].GetComponent<Tile>();
         Tile secondTile = tileArray[i, j].GetComponent<Tile>();
         Tile thirdTile = tileArray[i + 1, j].GetComponent<Tile>();
         Tile fourthTile = tileArray[i + 1, j + 1].GetComponent<Tile>();
+
+        if (firstTile == enemyTile || secondTile == enemyTile || thirdTile == enemyTile || fourthTile == enemyTile)
+        {
+            Debug.Log("Enemy on tile");
+            return;
+        }
+
+        if (firstTile == playerTile || secondTile == playerTile || thirdTile == playerTile || fourthTile == playerTile)
+        {
+            Debug.Log("Player on tile");
+            return;
+        }
 
         GameObject temp = tileArray[i + 1, j + 1];
 
@@ -155,9 +171,9 @@ public class TileManager : MonoBehaviour {
         thirdTile.setPosition(tempPos);
 
 
-        Debug.Log("Before rotation");
-        Debug.Log(secondTile.getX() + "," + secondTile.getY() + " | " + firstTile.getX() + "," + firstTile.getY());
-        Debug.Log(thirdTile.getX() + "," + thirdTile.getY() + " | " + fourthTile.getX() + "," + fourthTile.getY());
+        //Debug.Log("Before rotation");
+        //Debug.Log(secondTile.getX() + "," + secondTile.getY() + " | " + firstTile.getX() + "," + firstTile.getY());
+        //Debug.Log(thirdTile.getX() + "," + thirdTile.getY() + " | " + fourthTile.getX() + "," + fourthTile.getY());
         
         // Put 3 in 4
         tileArray[i + 1, j + 1] = tileArray[i + 1, j];
@@ -177,9 +193,9 @@ public class TileManager : MonoBehaviour {
         thirdTile = tileArray[i + 1, j].GetComponent<Tile>();
         fourthTile = tileArray[i + 1, j + 1].GetComponent<Tile>();
 
-        Debug.Log("After rotation");
-        Debug.Log(secondTile.getX() + "," + secondTile.getY() + " | " + firstTile.getX() + "," + firstTile.getY());
-        Debug.Log(thirdTile.getX() + "," + thirdTile.getY() + " | " + fourthTile.getX() + "," + fourthTile.getY());
+        //Debug.Log("After rotation");
+        //Debug.Log(secondTile.getX() + "," + secondTile.getY() + " | " + firstTile.getX() + "," + firstTile.getY());
+        //Debug.Log(thirdTile.getX() + "," + thirdTile.getY() + " | " + fourthTile.getX() + "," + fourthTile.getY());
 
 		int tempX = firstTile.getX();
 		int tempY = firstTile.getY();
@@ -193,7 +209,12 @@ public class TileManager : MonoBehaviour {
 		fourthTile.setX (tempX);
 		fourthTile.setY (tempY);
 
-		foreach (Tile tile in getTileNeighbours(firstTile)) {
+        //firstTile.UpdateTileNeighbours(getTileNeighbours(firstTile));
+        //getTileNeighbours(secondTile);
+        //getTileNeighbours(thirdTile);
+        //getTileNeighbours(fourthTile);
+
+        /*foreach (Tile tile in getTileNeighbours(firstTile)) {
 			if (tile != null) {
 				
 			}
@@ -219,8 +240,8 @@ public class TileManager : MonoBehaviour {
 			if (tile != null) {
 				tile.printTile ();
 			}
-		}
-
+		}*/
+        RefreshAllTiles();
     }
 
 	public Tile[] getTileNeighbours(Tile tile) {
@@ -229,29 +250,37 @@ public class TileManager : MonoBehaviour {
 
 		Tile[] tileNeighbours = new Tile[4];
 
-        Debug.Log("Trying to update: " + x + ", " + y);
+        //Debug.Log("Trying to update: " + x + ", " + y);
 
 		if (x == 0) {
 			tileNeighbours [3] = null;
 			tileNeighbours [1] = tileArray[x + 1, y].GetComponent<Tile>();
-		} else if (x == cols - 1) {
+          //  Debug.Log("Neighbor 1 at: " + (x + 1) + "," + y);
+        } else if (x == cols - 1) {
 			tileNeighbours [1] = null;
 			tileNeighbours [3] = tileArray[x - 1, y].GetComponent<Tile>();
-		} else {
-			tileNeighbours [1] = tileArray[x - 1, y].GetComponent<Tile>();
-			tileNeighbours [3] = tileArray[x + 1, y].GetComponent<Tile>();
-		}
+            //Debug.Log("Neighbor 3 at: " + (x - 1) + "," + y);
+        } else {
+			tileNeighbours [1] = tileArray[x + 1, y].GetComponent<Tile>();
+			tileNeighbours [3] = tileArray[x - 1, y].GetComponent<Tile>();
+            //Debug.Log("Neighbor 1 at: " + (x + 1) + "," + y);
+            //Debug.Log("Neighbor 3 at: " + (x - 1) + "," + y);
+        }
 
 		if (y == 0) {
 			tileNeighbours [0] = null;
 			tileNeighbours [2] = tileArray[x, y + 1].GetComponent<Tile>();
+            //Debug.Log("Neighbor 2 at: " + x + "," + (y + 1));
 		} else if (y == rows - 1) {
 			tileNeighbours [2] = null;
 			tileNeighbours [0] = tileArray[x, y - 1].GetComponent<Tile>();
-		} else {
+            //Debug.Log("Neighbor 0 at: " + x + "," + (y - 1));
+        } else {
 			tileNeighbours [0] = tileArray[x, y - 1].GetComponent<Tile>();
 			tileNeighbours [2] = tileArray[x, y + 1].GetComponent<Tile>();
-		}
+            //Debug.Log("Neighbor 0 at: " + x + "," + (y - 1));
+            //Debug.Log("Neighbor 2 at: " + x + "," + (y + 1));
+        }
 
 		return tileNeighbours;
 	}
@@ -270,6 +299,18 @@ public class TileManager : MonoBehaviour {
         Vector3 tempPos = new Vector3(firstTile.transform.position.x, firstTile.transform.position.y, firstTile.transform.position.z);
         int tempX = firstTile.getX();
         int tempY = firstTile.getY();
+
+        if (firstTile == enemyTile || secondTile == enemyTile || thirdTile == enemyTile || fourthTile == enemyTile)
+        {
+            Debug.Log("Enemy on tile");
+            return;
+        }
+
+        if (firstTile == playerTile || secondTile == playerTile || thirdTile == playerTile || fourthTile == playerTile)
+        {
+            Debug.Log("Player on tile");
+            return;
+        }
 
         /*
         // 1 go to 2
@@ -318,6 +359,7 @@ public class TileManager : MonoBehaviour {
         Debug.Log(firstTile.getX() + "," + firstTile.getY() + " | " + secondTile.getX() + "," + secondTile.getY());
         Debug.Log(fourthTile.getX() + "," + fourthTile.getY() + " | " + thirdTile.getX() + "," + thirdTile.getY());
         */
+        /*
 		foreach (Tile tile in getTileNeighbours(firstTile)) {
 			if (tile != null) tile.UpdateTileNeighbours (getTileNeighbours (tile));
 		}
@@ -329,7 +371,19 @@ public class TileManager : MonoBehaviour {
 		}
 		foreach (Tile tile in getTileNeighbours(fourthTile)) {
 			if (tile != null) tile.UpdateTileNeighbours (getTileNeighbours (tile));
-		}
+		}*/
+        RefreshAllTiles();
+    }
+
+    public void RefreshAllTiles()
+    {
+        for (int a = 0; a < rows; a++)
+        {
+            for (int b = 0; b < cols; b++)
+            {
+                tileArray[a, b].GetComponent<Tile>().UpdateTileNeighbours(getTileNeighbours(tileArray[a, b].GetComponent<Tile>()));
+            }
+        }
     }
 
     public void SelectTile(Tile tile) {

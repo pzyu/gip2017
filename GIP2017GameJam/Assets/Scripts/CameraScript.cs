@@ -61,7 +61,11 @@ public class CameraScript : MonoBehaviour
                 if (hit.collider.tag == "Tile")
                 {
                     Tile selectedTile = hit.transform.GetComponent<Tile>();
-                    selectedTile.RotateRightAndUpdate();
+                    if (selectedTile == tileManager.playerTile)
+                    {
+                        selectedTile.RotateRightAndUpdate();
+                        tileManager.RefreshAllTiles();
+                    }
                 }
 
 
@@ -85,7 +89,11 @@ public class CameraScript : MonoBehaviour
                 if (hit.collider.tag == "Tile")
                 {
                     Tile selectedTile = hit.transform.GetComponent<Tile>();
-                    selectedTile.RotateLeftAndUpdate();
+                    if (selectedTile == tileManager.playerTile)
+                    {
+                        selectedTile.RotateLeftAndUpdate();
+                        tileManager.RefreshAllTiles();
+                    }
                 }
 
                 if (hit.collider.tag == "Pivot")

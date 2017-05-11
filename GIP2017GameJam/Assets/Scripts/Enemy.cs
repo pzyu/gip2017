@@ -86,7 +86,7 @@ public class Enemy : MonoBehaviour {
 	IEnumerator MoveLeft() {
 		if (x > 0 && (y <= TileManager.rows && y >= 0)) {
 			x -= 1; 
-			print (x + ", " + y);
+			//print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3 ( tileSize, 0.0f, 0.0f);
 			transform.Translate (tileSize, 0.0f, 0.0f);
 			updateCurrentTile (x, y);
@@ -96,8 +96,12 @@ public class Enemy : MonoBehaviour {
 
 	void updateCurrentTile(int x, int y) {
 		currentTile = tileManager.obtainTile (y, x);
-		currentTile.UpdateConnectedNeighbours ();
-		currentTile.UpdateAllNeighbours ();
+        tileManager.enemyTile = currentTile;
+
+        tileManager.RefreshAllTiles();
+
+        //currentTile.UpdateConnectedNeighbours ();
+		//currentTile.UpdateAllNeighbours ();
 		//Debug.Log ("X:" + x + " Y:" + y + " " + currentTile.canMoveN () + " " + currentTile.canMoveE () + " " + currentTile.canMoveS () + " " + currentTile.canMoveW ());
 	}
 }
