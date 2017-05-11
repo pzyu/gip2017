@@ -6,6 +6,7 @@ public class Pivot : MonoBehaviour {
     
     private ArrayList selectionList = new ArrayList();
     public TileManager tileManager;
+    private AudioSource audioSource;
 
     public GameObject test1, test2, test3, test4;
     public int i, j;
@@ -13,6 +14,7 @@ public class Pivot : MonoBehaviour {
     // Use this for initialization
     void Start () {
         tileManager = GameObject.Find("TileManager").GetComponent<TileManager>();
+        audioSource = GetComponent<AudioSource>();
 	}
 	
 	// Update is called once per frame
@@ -35,10 +37,12 @@ public class Pivot : MonoBehaviour {
     public void RotateLeft()
     {
         tileManager.RotateLeft(j, i);
+        audioSource.Play();
     }
 
     public void RotateRight()
     {
         tileManager.RotateRight(j, i);
+        audioSource.Play();
     }
 }

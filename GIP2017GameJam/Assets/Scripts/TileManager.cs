@@ -125,7 +125,7 @@ public class TileManager : MonoBehaviour {
 
     public void RotateLeft(int j, int i)
     {
-        //Debug.Log("Rotating from " + i + ", " + j);
+        //Debug.Log("Rotating left from " + i + ", " + j);
 
         Tile firstTile = tileArray[i, j + 1].GetComponent<Tile>();
         Tile secondTile = tileArray[i, j].GetComponent<Tile>();
@@ -147,22 +147,28 @@ public class TileManager : MonoBehaviour {
         */
 
         // 4 go to 1
-        fourthTile.transform.position = firstTile.transform.position;
+        //fourthTile.transform.position = firstTile.transform.position;
 
         // 1 go to 2
-        firstTile.transform.position = secondTile.transform.position;
+        //firstTile.transform.position = secondTile.transform.position;
 
         // 2 go to 3
-        secondTile.transform.position = thirdTile.transform.position;
+        //secondTile.transform.position = thirdTile.transform.position;
 
         // 3 go to 4
-        thirdTile.transform.position = tempPos;
-        
-        
+        //thirdTile.transform.position = tempPos;
+
+        fourthTile.setPosition(firstTile.transform.position);
+        firstTile.setPosition(secondTile.transform.position);
+        secondTile.setPosition(thirdTile.transform.position);
+        thirdTile.setPosition(tempPos);
+
+        /*
         Debug.Log("Before rotation");
         Debug.Log(secondTile.getX() + "," + secondTile.getY() + " | " + firstTile.getX() + "," + firstTile.getY());
         Debug.Log(thirdTile.getX() + "," + thirdTile.getY() + " | " + fourthTile.getX() + "," + fourthTile.getY());
-        
+        */
+
         // Put 3 in 4
         tileArray[i + 1, j + 1] = tileArray[i + 1, j];
 
@@ -175,7 +181,7 @@ public class TileManager : MonoBehaviour {
         // Put 4 in 1
         tileArray[i, j + 1] = temp;
 
-
+        /*
         firstTile = tileArray[i, j + 1].GetComponent<Tile>();
         secondTile = tileArray[i, j].GetComponent<Tile>();
         thirdTile = tileArray[i + 1, j].GetComponent<Tile>();
@@ -184,7 +190,7 @@ public class TileManager : MonoBehaviour {
         Debug.Log("After rotation");
         Debug.Log(secondTile.getX() + "," + secondTile.getY() + " | " + firstTile.getX() + "," + firstTile.getY());
         Debug.Log(thirdTile.getX() + "," + thirdTile.getY() + " | " + fourthTile.getX() + "," + fourthTile.getY());
-
+        */
     }
 
     public void RotateRight(int j, int i)
@@ -211,16 +217,21 @@ public class TileManager : MonoBehaviour {
         */
 
         // 1 go to 2
-        firstTile.transform.position = secondTile.transform.position;
+        //firstTile.transform.position = secondTile.transform.position;
 
         // 2 go to 3
-        secondTile.transform.position = thirdTile.transform.position;
+        //secondTile.transform.position = thirdTile.transform.position;
 
         // 3 go to 4
-        thirdTile.transform.position = fourthTile.transform.position;
+        //thirdTile.transform.position = fourthTile.transform.position;
 
         // 4 go to 1
-        fourthTile.transform.position = tempPos;
+        //fourthTile.transform.position = tempPos;
+        
+        firstTile.setPosition(secondTile.transform.position);
+        secondTile.setPosition(thirdTile.transform.position);
+        thirdTile.setPosition(fourthTile.transform.position);
+        fourthTile.setPosition(tempPos);
 
         /*
         Debug.Log("Before rotation");

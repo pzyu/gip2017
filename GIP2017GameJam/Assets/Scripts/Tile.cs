@@ -10,9 +10,11 @@ public class Tile : MonoBehaviour {
     
     public float rotation = 0.0f;
     public Quaternion to = Quaternion.identity;
+    private Vector3 targetPos;
     private float speed = 1000.0f;
 
 	public bool isSelected;
+    private AudioSource audioSource;
 
     public enum TYPE {
         BLANK,
@@ -37,6 +39,8 @@ public class Tile : MonoBehaviour {
     public void Initialize (int x, int y, int type, int rotation) {
         debugText = transform.GetChild(0).GetComponent<TextMesh>();
         debugText.text = "X: " + x + " Y: " + y;
+
+        targetPos = transform.position;
 
         //Debug.Log("Initializing new tile: " + x + " " + y + " " + (TYPE)type);
         this.x = x;
@@ -69,11 +73,13 @@ public class Tile : MonoBehaviour {
     // Use this for initialization
     void Start () {
         //Debug.Log(getN() + " " + getE() + " " + getS() + " " + getW());
+        audioSource = GetComponent<AudioSource>();
     }
 	
 	// Update is called once per frame
 	void Update () {
         transform.rotation = Quaternion.RotateTowards(transform.rotation, to, speed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * 0.005f * Time.deltaTime);
     }
 
     // Sets type in a less cryptic manner
@@ -120,6 +126,8 @@ public class Tile : MonoBehaviour {
 
 		rotation -= 90;
 		to = Quaternion.Euler (0.0f, 0.0f, rotation);
+
+        audioSource.Play();
     }
 
 	// Updates the byte representation of the tile type
@@ -131,6 +139,8 @@ public class Tile : MonoBehaviour {
         
 		rotation += 90;
 		to = Quaternion.Euler (0.0f, 0.0f, rotation);
+
+        audioSource.Play();
     }
 
     void PrintByte(byte b) {
@@ -159,6 +169,11 @@ public class Tile : MonoBehaviour {
 	public void setY(int y) {
 		this.y = y;
         debugText.text = "X: " + this.x + " Y: " + this.y;
+    }
+
+    public void setPosition(Vector3 target)
+    {
+        targetPos = target;
     }
 
 	// Returns true if there is a path in this direction
