@@ -44,7 +44,6 @@ public class TileManager : MonoBehaviour {
         charArray = new char[result[0].Length][];
         for (int i = 0; i < result.Length; i++) {
 			char[] tempArr = result[i].ToCharArray();
-			Array.Reverse (tempArr);
             charArray[i] = tempArr;
             Debug.Log(new string(tempArr));
         }
@@ -62,17 +61,26 @@ public class TileManager : MonoBehaviour {
                 char cur = charArray[i][j];
                 
                 // Instantiate then initialize
-                tileArray[i][j] = Instantiate(tilePrefab, new Vector3(tileSize * i, tileSize * j, 0), Quaternion.identity);
+                tileArray[i][j] = Instantiate(tilePrefab, new Vector3(tileSize * j, -tileSize * i, 0), Quaternion.identity);
                 tileArray[i][j].GetComponent<Tile>().Initialize(i, j, i + j, int.Parse(cur.ToString()));
             }
         }
     }
 
 	public Vector3 getFirstTilePosition(){
-		return tileArray[0][4].transform.position;
+		return tileArray[0][0].transform.position;
+	}
+
+	public Vector3 getTilePosition(int x, int y){
+		return tileArray [x] [y].transform.position;
 	}
 
 	public float getTileSize() {
 		return tileSize;
 	}
+
+	public Tile obtainTile(int x, int y){
+		return tileArray [x] [y].GetComponent<Tile>();
+	}
+
 }

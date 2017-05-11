@@ -6,10 +6,11 @@ public class Player : MonoBehaviour {
 	//initial player Position;
 	public int x = 0; 
 	public int y = 0;
+	public Tile currentTile; 
 
 	// tile size to help with translation; 
 	public float tileSize = 5.0f; 
-	private bool canMove;
+	public bool canMove;
 	private IEnumerator moveCoroutine;
 	private TileManager tileManager; 
 
@@ -54,9 +55,9 @@ public class Player : MonoBehaviour {
 			Vector3 targetPosition = transform.position + new Vector3(0.0f,tileSize,0.0f); 
 			print (targetPosition);
 			transform.Translate (0.0f, tileSize, 0.0f);
+			updateCurrentTile (x, y);
 			yield return new WaitForSeconds(0.2f); 
 		}
-		canMove = true;
 	}
 
 	IEnumerator MoveDown() {
@@ -65,9 +66,9 @@ public class Player : MonoBehaviour {
 			print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3(0.0f,-1 *tileSize,0.0f);
 			transform.Translate (0.0f,-1 *tileSize,0.0f);
+			updateCurrentTile (x, y);
 			yield return new WaitForSeconds(0.2f);
 		}
-		canMove = true;
 	}
 
 	IEnumerator MoveRight() { 
@@ -76,9 +77,9 @@ public class Player : MonoBehaviour {
 			print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3 (tileSize, 0.0f, 0.0f);
 			transform.Translate (tileSize, 0.0f, 0.0f);
+			updateCurrentTile (x, y);
 			yield return new WaitForSeconds(0.2f);
 		}
-		canMove = true;
 	}
 
 	IEnumerator MoveLeft() {
@@ -87,9 +88,12 @@ public class Player : MonoBehaviour {
 			print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3 (-1 * tileSize, 0.0f, 0.0f);
 			transform.Translate (-1 * tileSize, 0.0f, 0.0f);
+			updateCurrentTile (x, y);
 			yield return new WaitForSeconds(0.2f);
 		}
-		canMove = true;
 	}
 
+	void updateCurrentTile(int x, int y) {
+		currentTile = tileManager.obtainTile (x, y);
+	}
 }
