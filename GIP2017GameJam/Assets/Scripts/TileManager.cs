@@ -125,7 +125,6 @@ public class TileManager : MonoBehaviour {
 
     public void RotateLeft(int j, int i)
     {
-        //Debug.Log("Rotating from " + i + ", " + j);
 
         Tile firstTile = tileArray[i, j + 1].GetComponent<Tile>();
         Tile secondTile = tileArray[i, j].GetComponent<Tile>();
@@ -135,16 +134,6 @@ public class TileManager : MonoBehaviour {
         GameObject temp = tileArray[i + 1, j + 1];
 
         Vector3 tempPos = new Vector3(fourthTile.transform.position.x, fourthTile.transform.position.y, fourthTile.transform.position.z);
-        int tempX = fourthTile.getX();
-        int tempY = fourthTile.getY();
-
-        /*
-        Debug.Log("First: " + firstTile.getX() + "," + firstTile.getY());
-        Debug.Log("Second: " + secondTile.getX() + "," + secondTile.getY());
-        Debug.Log("Third: " + thirdTile.getX() + "," + thirdTile.getY());
-        Debug.Log("Fourth: " + fourthTile.getX() + "," + fourthTile.getY());
-        Debug.Log("Temp: " + tempX + "," + tempY);
-        */
 
         // 4 go to 1
         fourthTile.transform.position = firstTile.transform.position;
@@ -185,7 +174,78 @@ public class TileManager : MonoBehaviour {
         Debug.Log(secondTile.getX() + "," + secondTile.getY() + " | " + firstTile.getX() + "," + firstTile.getY());
         Debug.Log(thirdTile.getX() + "," + thirdTile.getY() + " | " + fourthTile.getX() + "," + fourthTile.getY());
 
+		int tempX = firstTile.getX();
+		int tempY = firstTile.getY();
+
+		firstTile.setX (secondTile.getX ());
+		firstTile.setY (secondTile.getY ());
+		secondTile.setX (thirdTile.getX ());
+		secondTile.setY (thirdTile.getY ());
+		thirdTile.setX (fourthTile.getX ());
+		thirdTile.setY (fourthTile.getY ());
+		fourthTile.setX (tempX);
+		fourthTile.setY (tempY);
+
+		foreach (Tile tile in getTileNeighbours(firstTile)) {
+			if (tile != null) {
+				
+			}
+		}
+
+		// Extremely inefficient
+		foreach (Tile tile in getTileNeighbours(firstTile)) {
+			if (tile != null) tile.UpdateTileNeighbours (getTileNeighbours (tile));
+		}
+		foreach (Tile tile in getTileNeighbours(secondTile)) {
+			if (tile != null) tile.UpdateTileNeighbours (getTileNeighbours (tile));
+		}
+		foreach (Tile tile in getTileNeighbours(thirdTile)) {
+			if (tile != null) tile.UpdateTileNeighbours (getTileNeighbours (tile));
+		}
+		foreach (Tile tile in getTileNeighbours(fourthTile)) {
+			if (tile != null) tile.UpdateTileNeighbours (getTileNeighbours (tile));
+		}
+
+		int count = 0;
+		secondTile.printTile ();
+		foreach (Tile tile in getTileNeighbours(secondTile)) {
+			if (tile != null) {
+				tile.printTile ();
+			}
+		}
+
     }
+
+	public Tile[] getTileNeighbours(Tile tile) {
+		int x = tile.getX ();
+		int y = tile.getY ();
+
+		Tile[] tileNeighbours = new Tile[4];
+
+		if (x == 0) {
+			tileNeighbours [3] = null;
+			tileNeighbours [1] = tileArray[x + 1, y].GetComponent<Tile>();
+		} else if (x == cols - 1) {
+			tileNeighbours [1] = null;
+			tileNeighbours [3] = tileArray[x - 1, y].GetComponent<Tile>();
+		} else {
+			tileNeighbours [1] = tileArray[x - 1, y].GetComponent<Tile>();
+			tileNeighbours [3] = tileArray[x + 1, y].GetComponent<Tile>();
+		}
+
+		if (y == 0) {
+			tileNeighbours [0] = null;
+			tileNeighbours [2] = tileArray[x, y + 1].GetComponent<Tile>();
+		} else if (y == rows - 1) {
+			tileNeighbours [2] = null;
+			tileNeighbours [0] = tileArray[x, y - 1].GetComponent<Tile>();
+		} else {
+			tileNeighbours [0] = tileArray[x, y - 1].GetComponent<Tile>();
+			tileNeighbours [2] = tileArray[x, y + 1].GetComponent<Tile>();
+		}
+
+		return tileNeighbours;
+	}
 
     public void RotateRight(int j, int i)
     {
@@ -201,14 +261,6 @@ public class TileManager : MonoBehaviour {
         Vector3 tempPos = new Vector3(firstTile.transform.position.x, firstTile.transform.position.y, firstTile.transform.position.z);
         int tempX = firstTile.getX();
         int tempY = firstTile.getY();
-
-        /*
-        Debug.Log("First: " + firstTile.getX() + "," + firstTile.getY());
-        Debug.Log("Second: " + secondTile.getX() + "," + secondTile.getY());
-        Debug.Log("Third: " + thirdTile.getX() + "," + thirdTile.getY());
-        Debug.Log("Fourth: " + fourthTile.getX() + "," + fourthTile.getY());
-        Debug.Log("Temp: " + tempX + "," + tempY);
-        */
 
         // 1 go to 2
         firstTile.transform.position = secondTile.transform.position;
@@ -240,7 +292,7 @@ public class TileManager : MonoBehaviour {
         // Put 4 in 1
         tileArray[i, j] = temp;
 
-        /*
+        
         firstTile = tileArray[i, j].GetComponent<Tile>();
         secondTile = tileArray[i, j + 1].GetComponent<Tile>();
         thirdTile = tileArray[i + 1, j + 1].GetComponent<Tile>();
@@ -249,7 +301,19 @@ public class TileManager : MonoBehaviour {
         Debug.Log("After rotation");
         Debug.Log(firstTile.getX() + "," + firstTile.getY() + " | " + secondTile.getX() + "," + secondTile.getY());
         Debug.Log(fourthTile.getX() + "," + fourthTile.getY() + " | " + thirdTile.getX() + "," + thirdTile.getY());
-        */
+        
+		foreach (Tile tile in getTileNeighbours(firstTile)) {
+			if (tile != null) tile.UpdateTileNeighbours (getTileNeighbours (tile));
+		}
+		foreach (Tile tile in getTileNeighbours(secondTile)) {
+			if (tile != null) tile.UpdateTileNeighbours (getTileNeighbours (tile));
+		}
+		foreach (Tile tile in getTileNeighbours(thirdTile)) {
+			if (tile != null) tile.UpdateTileNeighbours (getTileNeighbours (tile));
+		}
+		foreach (Tile tile in getTileNeighbours(fourthTile)) {
+			if (tile != null) tile.UpdateTileNeighbours (getTileNeighbours (tile));
+		}
     }
 
     public void SelectTile(Tile tile) {
@@ -270,6 +334,9 @@ public class TileManager : MonoBehaviour {
 			tile.Unhighlight();
 		}
 	}
+
+
+
 	public void makeRandomLevel() {
 		int x = 0, y = 0;
 		int totalLength = rows + cols - 2;

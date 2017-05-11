@@ -198,6 +198,7 @@ public class Tile : MonoBehaviour {
 
 	public void UpdateTileNeighbours(Tile[] tileNeighbours) {
 		this.tileNeighbours = tileNeighbours;
+		UpdateAllNeighbours ();
 	}
 
 	public void UpdateConnectedNeighbours() {
@@ -205,7 +206,6 @@ public class Tile : MonoBehaviour {
 		connectedNeighbours[1] = getE() && tileNeighbours[1] != null && tileNeighbours[1].getW();
 		connectedNeighbours[2] = getS() && tileNeighbours[2] != null && tileNeighbours[2].getN();
 		connectedNeighbours[3] = getW() && tileNeighbours[3] != null && tileNeighbours[3].getE();
-		Debug.Log ("N:" + connectedNeighbours[0] + " E:" + connectedNeighbours[1] + " S:" + connectedNeighbours[2] + " W:" + connectedNeighbours[3]);
 	}
 
 	public void UpdateAllNeighbours() {
@@ -233,6 +233,9 @@ public class Tile : MonoBehaviour {
 	}
 
 	private void OnMouseDown() {
+		RotateRight(orientation);
+		UpdateConnectedNeighbours ();
+		UpdateAllNeighbours ();
     }
 
 	public void ChooseTile() {
@@ -251,5 +254,10 @@ public class Tile : MonoBehaviour {
 	{
 		isSelected = false;
 		sr.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+	}
+
+	public void printTile() {
+		Debug.Log ("X: " + x + " Y: " + y + " N:" + getN() + "," + connectedNeighbours[0] + 
+			" E:" + getE() + "," + connectedNeighbours[1] + " S:" + getS() + "," + connectedNeighbours[2] + " W:" + getW() + "," + connectedNeighbours[3]);
 	}
 }
