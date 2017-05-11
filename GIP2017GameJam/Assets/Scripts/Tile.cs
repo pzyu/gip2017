@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -30,8 +31,13 @@ public class Tile : MonoBehaviour {
 
     public Sprite[] spriteArray = new Sprite[6];
 
+    private TextMesh debugText;
+    
     // Constructor
-	public void Initialize (int x, int y, int type, int rotation) {
+    public void Initialize (int x, int y, int type, int rotation) {
+        debugText = transform.GetChild(0).GetComponent<TextMesh>();
+        debugText.text = "X: " + x + " Y: " + y;
+
         //Debug.Log("Initializing new tile: " + x + " " + y + " " + (TYPE)type);
         this.x = x;
         this.y = y;
@@ -145,13 +151,15 @@ public class Tile : MonoBehaviour {
         return y;
     }
 
-	public void setX( int x) {
+	public void setX(int x) {
 		this.x = x;
-	}
+        debugText.text = "X: " + this.x + " Y: " + this.y;
+    }
 
 	public void setY(int y) {
 		this.y = y;
-	}
+        debugText.text = "X: " + this.x + " Y: " + this.y;
+    }
 
 	// Returns true if there is a path in this direction
     private bool getN() {

@@ -15,13 +15,14 @@ public class CameraScript : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		if (Input.GetMouseButton(0))
+		/*if (Input.GetMouseButton(0))
 		{
 			RaycastHit hit;
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
 			if (Physics.Raycast(ray, out hit))
 			{
+
 				if (hit.collider != null)
 				{
 					Debug.DrawLine(transform.position, hit.point, Color.red);
@@ -42,7 +43,7 @@ public class CameraScript : MonoBehaviour
 		else if (!Input.GetMouseButton(0))
 		{
 			tileManager.RotateSelection();
-		}
+		}*/
 
 		// Right mouse click
 		if (Input.GetMouseButtonDown(1))
@@ -58,13 +59,38 @@ public class CameraScript : MonoBehaviour
 					//Debug.Log(hit.transform.GetComponent<Tile>().getType());
 					//Debug.Log("Hits at: " + hit.point);
 
-					Tile selectedTile = hit.transform.GetComponent<Tile>();
+					//Tile selectedTile = hit.transform.GetComponent<Tile>();
 					// TODO: Check if player is on tile
-					selectedTile.ChooseTile();
+					//selectedTile.ChooseTile();
 				}
-			}
+
+
+                if (hit.collider.tag == "Pivot")
+                {
+                    Debug.DrawLine(transform.position, hit.point, Color.green);
+                    Pivot selectedPivot = hit.transform.GetComponent<Pivot>();
+                    selectedPivot.RotateRight();
+                }
+            }
 		}
-	}
+
+        // Left mouse click
+        if (Input.GetMouseButtonDown(0))
+        {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider.tag == "Pivot")
+                {
+                    Debug.DrawLine(transform.position, hit.point, Color.yellow);
+                    Pivot selectedPivot = hit.transform.GetComponent<Pivot>();
+                    selectedPivot.RotateLeft();
+                }
+            }
+        }
+    }
 
 }
 										

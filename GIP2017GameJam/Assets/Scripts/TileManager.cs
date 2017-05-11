@@ -14,13 +14,16 @@ public class TileManager : MonoBehaviour {
 
 	public int[] tileDistribution = {1, 1, 1, 1, 4, 4, 4, 4, 3, 3, 3, 2};
 
-    private GameObject[,] tileArray;
+    public GameObject[,] tileArray;
     private int[,] intArray;
     private float tileSize;
 
     private string path = "../GIP2017GameJam/Assets/Maps/sample.txt";
 
     public GameObject tilePrefab;
+    public GameObject pivotPrefab;
+
+    private GameObject[,] pivotArray;
 
 	private ArrayList selectionList = new ArrayList();
 	private bool canRotate = true;
@@ -39,6 +42,7 @@ public class TileManager : MonoBehaviour {
         //InitializeCharArrayFromFile();
 		makeRandomLevel();
 		InitializeTileArray();
+        InitializePivots();
     }
 	
 	// Update is called once per frame
@@ -105,79 +109,150 @@ public class TileManager : MonoBehaviour {
 		tileArray[i, j].GetComponent<Tile>().Initialize(i, j, type, rotation);
 	}
 
-	public void RotateSelection() {
-		// If selection is not full, then reset
-		if (selectionList.Count < 4) {
-			ResetSelection();
-		} else {
-			if (canRotate) {
-				canRotate = false;
-				Debug.Log("Rotating selection");
+    private void InitializePivots()
+    {
+        pivotArray = new GameObject[4, 4];
+        for (int i = 1; i < 5; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                pivotArray[i - 1, j] = Instantiate(pivotPrefab, new Vector3(-tileSize/2 + (-tileSize * j), 
+                    tileSize/2 + (-tileSize * i), 0.1f), Quaternion.Euler(0.0f, 0.0f, 90));
+                pivotArray[i - 1, j].GetComponent<Pivot>().Initialize(i - 1, j);
+            }
+        }
+    }
 
-				// Otherwise, rotate based on order
-				// Rotate 0 to 1 to 2 to 3
-				// Check first two to determine rotation
-				Tile firstTile = (Tile)selectionList[0];
-				Tile secondTile = (Tile)selectionList[1];
-				Tile thirdTile = (Tile)selectionList[2];
-				Tile fourthTile = (Tile)selectionList[3];
+    public void RotateLeft(int j, int i)
+    {
+        //Debug.Log("Rotating from " + i + ", " + j);
 
-				Vector3 tempPos = new Vector3(firstTile.transform.position.x, firstTile.transform.position.y, firstTile.transform.position.z);
-				int tempX = firstTile.getX();
-				int tempY = firstTile.getY();
+        Tile firstTile = tileArray[i, j + 1].GetComponent<Tile>();
+        Tile secondTile = tileArray[i, j].GetComponent<Tile>();
+        Tile thirdTile = tileArray[i + 1, j].GetComponent<Tile>();
+        Tile fourthTile = tileArray[i + 1, j + 1].GetComponent<Tile>();
 
-				Debug.Log("First: " + firstTile.getX() + "," + firstTile.getY());
-				Debug.Log("Second: " + secondTile.getX() + "," + secondTile.getY());
+        GameObject temp = tileArray[i + 1, j + 1];
 
-				// If it forms a square
-				bool horiz = System.Math.Abs(firstTile.getX() - secondTile.getX()) == 1 && System.Math.Abs(firstTile.getY() - secondTile.getY()) == 0 &&
-					System.Math.Abs(firstTile.getX() - fourthTile.getX()) == 0 && System.Math.Abs(firstTile.getY() - fourthTile.getY()) == 1;
+        Vector3 tempPos = new Vector3(fourthTile.transform.position.x, fourthTile.transform.position.y, fourthTile.transform.position.z);
+        int tempX = fourthTile.getX();
+        int tempY = fourthTile.getY();
 
-				bool vert = System.Math.Abs(firstTile.getX() - secondTile.getX()) == 0 && System.Math.Abs(firstTile.getY() - secondTile.getY()) == 1 &&
-					System.Math.Abs(firstTile.getX() - fourthTile.getX()) == 1 && System.Math.Abs(firstTile.getY() - fourthTile.getY()) == 0;
+        /*
+        Debug.Log("First: " + firstTile.getX() + "," + firstTile.getY());
+        Debug.Log("Second: " + secondTile.getX() + "," + secondTile.getY());
+        Debug.Log("Third: " + thirdTile.getX() + "," + thirdTile.getY());
+        Debug.Log("Fourth: " + fourthTile.getX() + "," + fourthTile.getY());
+        Debug.Log("Temp: " + tempX + "," + tempY);
+        */
 
-				if (horiz || vert)
-				{
-					// 1 in 2
-					firstTile.transform.position = secondTile.transform.position;
+        // 4 go to 1
+        fourthTile.transform.position = firstTile.transform.position;
 
-					// 2 in 3
-					secondTile.transform.position = thirdTile.transform.position;
+        // 1 go to 2
+        firstTile.transform.position = secondTile.transform.position;
 
-					// 3 in 4
-					thirdTile.transform.position = fourthTile.transform.position;
+        // 2 go to 3
+        secondTile.transform.position = thirdTile.transform.position;
 
-					// 4 in 1
-					fourthTile.transform.position = tempPos;
+        // 3 go to 4
+        thirdTile.transform.position = tempPos;
+        
+        
+        Debug.Log("Before rotation");
+        Debug.Log(secondTile.getX() + "," + secondTile.getY() + " | " + firstTile.getX() + "," + firstTile.getY());
+        Debug.Log(thirdTile.getX() + "," + thirdTile.getY() + " | " + fourthTile.getX() + "," + fourthTile.getY());
+        
+        // Put 3 in 4
+        tileArray[i + 1, j + 1] = tileArray[i + 1, j];
 
-					Debug.Log("Replacing " + firstTile.getX() + "," + firstTile.getY() + " with " + secondTile.getX() + "," + secondTile.getY());
-					tileArray[firstTile.getX(), firstTile.getY()] = tileArray[secondTile.getX(), secondTile.getY()];
-					firstTile.setX(secondTile.getX());
-					firstTile.setY(secondTile.getY());
+        // Put 2 in 3
+        tileArray[i + 1, j] = tileArray[i, j];
 
-					Debug.Log("Replacing " + secondTile.getX() + "," + secondTile.getY() + " with " + thirdTile.getX() + "," + thirdTile.getY());
-					tileArray[secondTile.getX(), secondTile.getY()] = tileArray[thirdTile.getX(), thirdTile.getY()];
-					secondTile.setX(thirdTile.getX());
-					secondTile.setY(thirdTile.getY());
+        // Put 1 in 2
+        tileArray[i, j] = tileArray[i, j + 1];
 
-					Debug.Log("Replacing " + thirdTile.getX() + "," + thirdTile.getY() + " with " + fourthTile.getX() + "," + fourthTile.getY());
-					tileArray[thirdTile.getX(), thirdTile.getY()] = tileArray[fourthTile.getX(), fourthTile.getY()];
-					thirdTile.setX(fourthTile.getX());
-					thirdTile.setY(fourthTile.getY());
+        // Put 4 in 1
+        tileArray[i, j + 1] = temp;
 
-					Debug.Log("Replacing " + fourthTile.getX() + "," + fourthTile.getY() + " with " + tempX + "," + tempY);
-					tileArray[fourthTile.getX(), fourthTile.getY()] = tileArray[tempX, tempY];
-					fourthTile.setX(tempX);
-					fourthTile.setY(tempY);
-				}
 
-				// Now reset
-				ResetSelection();
-			}
-		}
-	}
+        firstTile = tileArray[i, j + 1].GetComponent<Tile>();
+        secondTile = tileArray[i, j].GetComponent<Tile>();
+        thirdTile = tileArray[i + 1, j].GetComponent<Tile>();
+        fourthTile = tileArray[i + 1, j + 1].GetComponent<Tile>();
 
-	public void SelectTile(Tile tile) {
+        Debug.Log("After rotation");
+        Debug.Log(secondTile.getX() + "," + secondTile.getY() + " | " + firstTile.getX() + "," + firstTile.getY());
+        Debug.Log(thirdTile.getX() + "," + thirdTile.getY() + " | " + fourthTile.getX() + "," + fourthTile.getY());
+
+    }
+
+    public void RotateRight(int j, int i)
+    {
+        //Debug.Log("Rotating from " + i + ", " + j);
+
+        Tile firstTile = tileArray[i, j].GetComponent<Tile>();
+        Tile secondTile = tileArray[i, j + 1].GetComponent<Tile>();
+        Tile thirdTile = tileArray[i + 1, j + 1].GetComponent<Tile>();
+        Tile fourthTile = tileArray[i + 1, j].GetComponent<Tile>();
+
+        GameObject temp = tileArray[i + 1, j];
+
+        Vector3 tempPos = new Vector3(firstTile.transform.position.x, firstTile.transform.position.y, firstTile.transform.position.z);
+        int tempX = firstTile.getX();
+        int tempY = firstTile.getY();
+
+        /*
+        Debug.Log("First: " + firstTile.getX() + "," + firstTile.getY());
+        Debug.Log("Second: " + secondTile.getX() + "," + secondTile.getY());
+        Debug.Log("Third: " + thirdTile.getX() + "," + thirdTile.getY());
+        Debug.Log("Fourth: " + fourthTile.getX() + "," + fourthTile.getY());
+        Debug.Log("Temp: " + tempX + "," + tempY);
+        */
+
+        // 1 go to 2
+        firstTile.transform.position = secondTile.transform.position;
+
+        // 2 go to 3
+        secondTile.transform.position = thirdTile.transform.position;
+
+        // 3 go to 4
+        thirdTile.transform.position = fourthTile.transform.position;
+
+        // 4 go to 1
+        fourthTile.transform.position = tempPos;
+
+        /*
+        Debug.Log("Before rotation");
+        Debug.Log(firstTile.getX() + "," + firstTile.getY() + " | " + secondTile.getX() + "," + secondTile.getY());
+        Debug.Log(fourthTile.getX() + "," + fourthTile.getY() + " | " + thirdTile.getX() + "," + thirdTile.getY());
+        */
+
+        // Put 3 in 4
+        tileArray[i + 1, j] = tileArray[i + 1, j + 1];
+
+        // Put 2 in 3
+        tileArray[i + 1, j + 1] = tileArray[i, j + 1];
+
+        // Put 1 in 2
+        tileArray[i, j + 1] = tileArray[i, j];
+
+        // Put 4 in 1
+        tileArray[i, j] = temp;
+
+        /*
+        firstTile = tileArray[i, j].GetComponent<Tile>();
+        secondTile = tileArray[i, j + 1].GetComponent<Tile>();
+        thirdTile = tileArray[i + 1, j + 1].GetComponent<Tile>();
+        fourthTile = tileArray[i + 1, j].GetComponent<Tile>();
+
+        Debug.Log("After rotation");
+        Debug.Log(firstTile.getX() + "," + firstTile.getY() + " | " + secondTile.getX() + "," + secondTile.getY());
+        Debug.Log(fourthTile.getX() + "," + fourthTile.getY() + " | " + thirdTile.getX() + "," + thirdTile.getY());
+        */
+    }
+
+    public void SelectTile(Tile tile) {
 		if (selectionList.Count < 4) {
 			// TODO: Check tile selection and player
 			selectionList.Add(tile);

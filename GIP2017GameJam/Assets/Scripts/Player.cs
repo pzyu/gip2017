@@ -22,6 +22,7 @@ public class Player : MonoBehaviour {
 		transform.position = new Vector3 (startingPosition.x, startingPosition.y, transform.position.z);
 		tileSize = tileManager.getTileSize ();
 		updateCurrentTile (x, y);
+		// Update connected neighbours
 	}
 	
 	// Update is called once per frame
