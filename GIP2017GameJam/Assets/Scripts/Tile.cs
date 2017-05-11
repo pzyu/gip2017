@@ -11,6 +11,8 @@ public class Tile : MonoBehaviour {
     public Quaternion to = Quaternion.identity;
     private float speed = 1000.0f;
 
+	public bool isSelected;
+
     public enum TYPE {
         BLANK,
         PIPE,
@@ -134,14 +136,22 @@ public class Tile : MonoBehaviour {
     }
 
 	// Get X coordinate of Tile (position)
-    int getX() {
+    public int getX() {
         return x;
     }
 
 	// Get Y coordinate of Tile (position)
-    int getY() {
+	public int getY() {
         return y;
     }
+
+	public void setX( int x) {
+		this.x = x;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
 
 	// Returns true if there is a path in this direction
     private bool getN() {
@@ -210,4 +220,16 @@ public class Tile : MonoBehaviour {
         RotateRight(orientation);
 		UpdateConnectedNeighbours ();
     }
+
+	public void Highlight()
+	{
+		isSelected = true;
+		sr.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
+	}
+
+	public void Unhighlight()
+	{
+		isSelected = false;
+		sr.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+	}
 }

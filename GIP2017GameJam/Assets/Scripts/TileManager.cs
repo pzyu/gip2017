@@ -22,6 +22,9 @@ public class TileManager : MonoBehaviour {
 
     public GameObject tilePrefab;
 
+	private ArrayList selectionList = new ArrayList();
+	private bool canRotate = true;
+
     /*
         0 - BLANK,
         1 - PIPE,
@@ -100,6 +103,111 @@ public class TileManager : MonoBehaviour {
 		int rotation = 0;
 		tileArray[i, j] = Instantiate(tilePrefab, new Vector3(-tileSize * j, -tileSize * i, 0), Quaternion.Euler(0.0f, 0.0f, rotation * 90));
 		tileArray[i, j].GetComponent<Tile>().Initialize(i, j, type, rotation);
+	}
+
+	public void RotateSelection() {
+		// If selection is not full, then reset
+		if (selectionList.Count < 4) {
+			ResetSelection();
+		} else {
+			if (canRotate) {
+				canRotate = false;
+				Debug.Log("Rotating selection");
+
+				// Otherwise, rotate based on order
+				// Rotate 0 to 1 to 2 to 3
+				// Check first two to determine rotation
+				Tile firstTile = (Tile)selectionList[0];
+				Tile secondTile = (Tile)selectionList[1];
+				Tile thirdTile = (Tile)selectionList[2];
+				Tile fourthTile = (Tile)selectionList[3];
+
+				Vector3 tempPos = new Vector3(firstTile.transform.position.x, firstTile.transform.position.y, firstTile.transform.position.z);
+				int tempX = firstTile.getX();
+				int tempY = firstTile.getY();
+
+				Debug.Log("First: " + firstTile.getX() + "," + firstTile.getY());
+				Debug.Log("Second: " + secondTile.getX() + "," + secondTile.getY());
+
+				// If both Y's are same level
+				if (firstTile.getY() == secondTile.getY())
+				{
+					// If first is left of second, then rotate clockwise
+					if (firstTile.getX() < secondTile.getX())
+					{
+						// 1 in 2
+						firstTile.transform.position = secondTile.transform.position;
+
+						// 2 in 3
+						secondTile.transform.position = thirdTile.transform.position;
+
+						// 3 in 4
+						thirdTile.transform.position = fourthTile.transform.position;
+
+						// 4 in 1
+						fourthTile.transform.position = tempPos;
+
+						Debug.Log("Replacing " + firstTile.getX() + "," + firstTile.getY() + " with " + secondTile.getX() + "," + secondTile.getY());
+						tileArray[firstTile.getX(), firstTile.getY()] = tileArray[secondTile.getX(),secondTile.getY()];
+						firstTile.setX(secondTile.getX());
+						firstTile.setY(secondTile.getY());
+
+						Debug.Log("Replacing " + secondTile.getX() + "," + secondTile.getY() + " with " + thirdTile.getX() + "," + thirdTile.getY());
+						tileArray[secondTile.getX(), secondTile.getY()] = tileArray[thirdTile.getX(),thirdTile.getY()];
+						secondTile.setX(thirdTile.getX());
+						secondTile.setY(thirdTile.getY());
+
+						Debug.Log("Replacing " + thirdTile.getX() + "," + thirdTile.getY() + " with " + fourthTile.getX() + "," + fourthTile.getY());
+						tileArray[thirdTile.getX(), thirdTile.getY()] = tileArray[fourthTile.getX(), fourthTile.getY()];
+						thirdTile.setX(fourthTile.getX());
+						thirdTile.setY(fourthTile.getY());
+
+						Debug.Log("Replacing " + fourthTile.getX() + "," + fourthTile.getY() + " with " + tempX + "," + tempY);
+						tileArray[fourthTile.getX(), fourthTile.getY()] = tileArray[tempX, tempY];
+						fourthTile.setX(tempX);
+						fourthTile.setY(tempY);
+					}
+
+					else
+					{
+						// Otherwise, rotate anti clockwise
+					}
+				}
+				else if (firstTile.getX() == secondTile.getX())
+				{
+					// If first is top of second, then rotate clockwise
+					if (firstTile.getY() < secondTile.getY())
+					{
+
+					} else
+					{
+						// Otherwise, rotate anti clockwise
+					}
+				}
+
+				// Now reset
+				ResetSelection();
+			}
+		}
+	}
+
+	public void SelectTile(Tile tile) {
+		if (selectionList.Count < 4) {
+			// TODO: Connectivity check
+			selectionList.Add(tile);
+			tile.Highlight();
+		}
+	}
+
+	public void ResetSelection()
+	{
+		canRotate = true;
+		for (int i = 0; i < selectionList.Count; i++)
+		{
+			Tile tile = (Tile)selectionList[i];
+			selectionList.RemoveAt(i);
+			tile.Unhighlight();
+		}
 	}
 
 	public void makeRandomLevel() {
