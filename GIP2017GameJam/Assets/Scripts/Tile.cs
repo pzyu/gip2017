@@ -137,20 +137,20 @@ public class Tile : MonoBehaviour {
 
 	// Get X coordinate of Tile (position)
     public int getX() {
-        return x;
+        return y;
     }
 
 	// Get Y coordinate of Tile (position)
 	public int getY() {
-        return y;
+        return x;
     }
 
 	public void setX( int x) {
-		this.x = x;
+		this.y = x;
 	}
 
 	public void setY(int y) {
-		this.y = y;
+		this.x = y;
 	}
 
 	// Returns true if there is a path in this direction
@@ -217,8 +217,17 @@ public class Tile : MonoBehaviour {
 	}
 
 	private void OnMouseDown() {
+        /*if (Input.GetMouseButtonDown(1))
+        {
+            RotateRight(orientation);
+            UpdateConnectedNeighbours();
+        }*/
+    }
+
+    public void ChooseTile()
+    {
         RotateRight(orientation);
-		UpdateConnectedNeighbours ();
+        UpdateConnectedNeighbours();
     }
 
 	public void Highlight()
