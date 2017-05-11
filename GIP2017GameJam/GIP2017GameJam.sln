@@ -1,7 +1,7 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2017
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GIP2017GameJam", "GIP2017GameJam.csproj", "{11CEF0E5-DA41-76B7-42D7-EF44B844E784}"
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GIP2017GameJam", "Assembly-CSharp.csproj", "{B5B553C8-D65F-C46F-4601-1E243FB9B68F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,12 +9,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{11CEF0E5-DA41-76B7-42D7-EF44B844E784}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{11CEF0E5-DA41-76B7-42D7-EF44B844E784}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{11CEF0E5-DA41-76B7-42D7-EF44B844E784}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{11CEF0E5-DA41-76B7-42D7-EF44B844E784}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5B553C8-D65F-C46F-4601-1E243FB9B68F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5B553C8-D65F-C46F-4601-1E243FB9B68F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5B553C8-D65F-C46F-4601-1E243FB9B68F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5B553C8-D65F-C46F-4601-1E243FB9B68F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
 	EndGlobalSection
 EndGlobal

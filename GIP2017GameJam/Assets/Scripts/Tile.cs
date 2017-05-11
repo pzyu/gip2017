@@ -200,6 +200,14 @@ public class Tile : MonoBehaviour {
 		Debug.Log ("N:" + connectedNeighbours[0] + " E:" + connectedNeighbours[1] + " S:" + connectedNeighbours[2] + " W:" + connectedNeighbours[3]);
 	}
 
+	public void UpdateAllNeighbours() {
+		for (int i = 0; i < 4; i++) {
+			if (tileNeighbours [i] != null) {
+				tileNeighbours [i].UpdateConnectedNeighbours ();
+			}
+		}
+	}
+
 	public bool canMoveN() {
 		return connectedNeighbours[0];
 	}
@@ -217,9 +225,13 @@ public class Tile : MonoBehaviour {
 	}
 
 	private void OnMouseDown() {
-        RotateRight(orientation);
-		UpdateConnectedNeighbours ();
     }
+
+	public void ChooseTile() {
+		RotateRight(orientation);
+		UpdateConnectedNeighbours ();
+		UpdateAllNeighbours ();
+	}
 
 	public void Highlight()
 	{
