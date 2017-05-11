@@ -11,6 +11,8 @@ public class Tile : MonoBehaviour {
     public Quaternion to = Quaternion.identity;
     private float speed = 1000.0f;
 
+    public bool isSelected;
+
     public enum TYPE {
         BLANK,
         PIPE,
@@ -35,6 +37,7 @@ public class Tile : MonoBehaviour {
         this.id = id;
         SetType((TYPE)type);
         sr = GetComponent<SpriteRenderer>();
+        isSelected = false;
         Debug.Log(sr);
     }
 
@@ -85,7 +88,7 @@ public class Tile : MonoBehaviour {
     }
 
     void RotateLeft(byte b) {
-        Debug.Log("Rotating Left");
+        //Debug.Log("Rotating Left");
         byte mask = 0xff;
         orientation = (byte)(((b << 2) | (b >> 6)) & mask);
 
@@ -94,7 +97,7 @@ public class Tile : MonoBehaviour {
     }
 
     void RotateRight(byte b) {
-        Debug.Log("Rotating Right");
+        //Debug.Log("Rotating Right");
         byte mask = 0xff;
         orientation = (byte)(((b >> 2) | (b << 6)) & mask);
         
@@ -112,12 +115,22 @@ public class Tile : MonoBehaviour {
     }
 
     // Getters
-    int getX() {
+    public int getX() {
         return x;
     }
 
-    int getY() {
+    public int getY() {
         return y;
+    }
+
+    public void setX(int x)
+    {
+        this.x = x;
+    }
+
+    public void setY(int y)
+    {
+        this.y = y;
     }
 
     bool getN() {
@@ -143,7 +156,7 @@ public class Tile : MonoBehaviour {
         return (orientation & mask) != 0;
     }
 
-    TYPE getType() {
+    public TYPE getType() {
         return tileType;
     }
 
@@ -153,5 +166,17 @@ public class Tile : MonoBehaviour {
 
     private void OnMouseDown() {
         RotateRight(orientation);
+    }
+
+    public void Highlight()
+    {
+        isSelected = true;
+        sr.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
+    }
+
+    public void Unhighlight()
+    {
+        isSelected = false;
+        sr.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
     }
 }
