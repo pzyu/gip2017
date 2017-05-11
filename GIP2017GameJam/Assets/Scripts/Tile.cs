@@ -23,6 +23,8 @@ public class Tile : MonoBehaviour {
     private TYPE tileType = TYPE.BLANK;
 
     private SpriteRenderer sr;
+	public Tile[] tileNeighbours = new Tile[4]; // NESW
+	private bool[] connectedNeighbours = new bool[4]; // NESW
 
     public Sprite[] spriteArray = new Sprite[6];
 
@@ -142,25 +144,25 @@ public class Tile : MonoBehaviour {
     }
 
 	// Returns true if there is a path in this direction
-    bool getN() {
+    private bool getN() {
         byte mask = 0xC0;
         return (orientation & mask) != 0;
     }
 
 	// Returns true if there is a path in this direction
-    bool getE() {
+	private bool getE() {
         byte mask = 0x30;
         return (orientation & mask) != 0;
     }
 
 	// Returns true if there is a path in this direction
-    bool getS() {
+	private bool getS() {
         byte mask = 0x0C;
         return (orientation & mask) != 0;
     }
 
 	// Returns true if there is a path in this direction
-    bool getW() {
+	private bool getW() {
         byte mask = 0x03;
         return (orientation & mask) != 0;
     }
@@ -173,7 +175,40 @@ public class Tile : MonoBehaviour {
         return orientation;
     }
 
-    private void OnMouseDown() {
+
+
+
+	public void UpdateTileNeighbours(Tile[] tileNeighbours) {
+		this.tileNeighbours = tileNeighbours;
+	}
+
+	public void UpdateConnectedNeighbours() {
+		connectedNeighbours[0] = getN() && tileNeighbours[0] != null && tileNeighbours[0].getS();
+		connectedNeighbours[1] = getE() && tileNeighbours[1] != null && tileNeighbours[1].getW();
+		connectedNeighbours[2] = getS() && tileNeighbours[2] != null && tileNeighbours[2].getN();
+		connectedNeighbours[3] = getW() && tileNeighbours[3] != null && tileNeighbours[3].getE();
+		Debug.Log("NN:" + (tileNeighbours[0] != null) + "EE:" + (tileNeighbours[1] != null) + "SS:" + (tileNeighbours[2] != null) + "WW:" + (tileNeighbours[3] != null));
+		Debug.Log("N:" + connectedNeighbours[0] + "E:" + connectedNeighbours[1] + "S:" + connectedNeighbours[2] + "W:" + connectedNeighbours[3]);
+	}
+
+	public bool canMoveN() {
+		return connectedNeighbours[0];
+	}
+
+	public bool canMoveE() {
+		return connectedNeighbours[1];
+	}
+
+	public bool canMoveS() {
+		return connectedNeighbours[2];
+	}
+
+	public bool canMoveW() {
+		return connectedNeighbours[3];
+	}
+
+	private void OnMouseDown() {
         RotateRight(orientation);
+		UpdateConnectedNeighbours ();
     }
 }

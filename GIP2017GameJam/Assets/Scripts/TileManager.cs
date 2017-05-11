@@ -50,6 +50,7 @@ public class TileManager : MonoBehaviour {
 		intArray = new int[result.Length, result[0].Length];
 		for (int i = 0; i < result.Length; i++) {
 			char[] tempArr = result[i].ToCharArray();
+			System.Array.Reverse (tempArr);
 			for (int j = 0; j < result [i].Length; j++) {
 				intArray[i, j] = int.Parse(tempArr[j].ToString());
 			}
@@ -66,6 +67,34 @@ public class TileManager : MonoBehaviour {
 				InstantiateTile(i, j, intArray[i, j]);
             }
         }
+
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				if (i - 1 < 0) {
+					tileArray[i, j].GetComponent<Tile>().tileNeighbours[0] = null;
+				} else {
+					tileArray[i, j].GetComponent<Tile>().tileNeighbours[0] = tileArray[i - 1, j].GetComponent<Tile>();
+				}
+
+				if (j + 1 > cols - 1) {
+					tileArray[i, j].GetComponent<Tile>().tileNeighbours[1] = null;
+				} else {
+					tileArray[i, j].GetComponent<Tile>().tileNeighbours[1] = tileArray[i, j + 1].GetComponent<Tile>();
+				}
+
+				if (i + 1 > rows - 1) {
+					tileArray[i, j].GetComponent<Tile>().tileNeighbours[2] = null;
+				} else {
+					tileArray[i, j].GetComponent<Tile>().tileNeighbours[2] = tileArray[i + 1, j].GetComponent<Tile>();
+				}
+
+				if (j - 1 < 0) {
+					tileArray[i, j].GetComponent<Tile>().tileNeighbours[3] = null;
+				} else {
+					tileArray[i, j].GetComponent<Tile>().tileNeighbours[3] = tileArray[i, j - 1].GetComponent<Tile>();
+				}
+			}
+		}
     }
 
 	private void InstantiateTile(int i, int j, int type) {
