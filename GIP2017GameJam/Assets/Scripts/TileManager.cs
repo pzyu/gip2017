@@ -64,7 +64,15 @@ public class TileManager : MonoBehaviour {
         tileArray = new GameObject[rows, cols];
         tileSize = tilePrefab.GetComponent<Renderer>().bounds.size.x;
 
-		for (int i = 0; i < rows; i++) {
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                InstantiateTile(i, j, intArray[i, j]);
+            }
+        }
+
+        for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 				if (i - 1 < 0) {
 					tileArray[i, j].GetComponent<Tile>().tileNeighbours[0] = null;
@@ -225,8 +233,8 @@ public class TileManager : MonoBehaviour {
 
 	private void InstantiateTile(int i, int j, int type) {
 		int rotation = 0;
-		tileArray[i, j] = Instantiate(tilePrefab, new Vector3(-tileSize * j, -tileSize * i, 0), Quaternion.Euler(0.0f, 0.0f, rotation * 90));
-		tileArray[i, j].GetComponent<Tile>().Initialize(i, j, type, rotation);
+		tileArray[i, j] = Instantiate(tilePrefab, new Vector3(tileSize * j, -tileSize * i, 0), Quaternion.Euler(0.0f, 0.0f, rotation * 90));
+		tileArray[i, j].GetComponent<Tile>().Initialize(j, i, type, rotation);
 	}
 
 	public void makeRandomLevel() {
