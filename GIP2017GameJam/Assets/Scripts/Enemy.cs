@@ -50,9 +50,12 @@ public class Enemy : MonoBehaviour {
 				moveCoroutine = MoveRight (); 
 				canMove = false; 
 			}
+
 			if (moveCoroutine != null) {
 				StartCoroutine (moveCoroutine);
 			}
+
+			canMove = false; 
 		}
         transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * 0.01f * Time.deltaTime);
     }
@@ -79,7 +82,6 @@ public class Enemy : MonoBehaviour {
 	IEnumerator MoveDown() {
 		if (y < TileManager.rows || ((x == TileManager.cols) && (y == TileManager.rows))) {
 			y += 1;  
-			print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3(0.0f,-1 *tileSize,0.0f);
             //transform.Translate (0.0f,-1 *tileSize,0.0f);
             targetPos = targetPosition;
@@ -97,7 +99,6 @@ public class Enemy : MonoBehaviour {
 	IEnumerator MoveRight() { 
 		if (x < TileManager.cols && (y <= TileManager.rows && y >= 0)) {
 			x += 1;
-			print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3 (-tileSize, 0.0f, 0.0f);
             //transform.Translate (-tileSize, 0.0f, 0.0f);
             targetPos = targetPosition;
@@ -115,7 +116,6 @@ public class Enemy : MonoBehaviour {
 	IEnumerator MoveLeft() {
 		if (x > 0 && (y <= TileManager.rows && y >= 0)) {
 			x -= 1; 
-			//print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3 ( tileSize, 0.0f, 0.0f);
             //transform.Translate (tileSize, 0.0f, 0.0f);
             targetPos = targetPosition;

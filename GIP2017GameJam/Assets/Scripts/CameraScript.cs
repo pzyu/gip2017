@@ -65,6 +65,7 @@ public class CameraScript : MonoBehaviour
                     {
                         selectedTile.RotateRightAndUpdate();
                         tileManager.RefreshAllTiles();
+						selectedTile.printTile ();
                     }
                 }
 
@@ -89,6 +90,7 @@ public class CameraScript : MonoBehaviour
                 if (hit.collider.tag == "Tile")
                 {
                     Tile selectedTile = hit.transform.GetComponent<Tile>();
+
 					if (selectedTile == tileManager.playerTile) {
 						selectedTile.RotateLeftAndUpdate ();
 						tileManager.RefreshAllTiles ();
