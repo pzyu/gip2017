@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (!player.canMove && isPlayerTurn) {
+			checkForRelic (); 
 			enableEnemyMovement ();
 			isPlayerTurn = false; 
 			isEnemyTurn = true; 
@@ -31,6 +32,13 @@ public class GameManager : MonoBehaviour {
 			player.canMove = true; 
 			isEnemyTurn = false; 
 			isPlayerTurn = true; 
+		}
+	}
+
+	void checkForRelic() {
+		Tile playerTile = GetPlayerTile (); 
+		if (playerTile.transform.childCount > 1) {
+			Debug.Log ("HI");
 		}
 	}
 
