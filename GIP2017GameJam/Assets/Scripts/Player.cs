@@ -110,4 +110,21 @@ public class Player : MonoBehaviour {
 
         //Debug.Log ("X:" + x + " Y:" + y + " " + currentTile.canMoveN () + " " + currentTile.canMoveE () + " " + currentTile.canMoveS () + " " + currentTile.canMoveW ());
 	}
+
+	public void runMoveUp() {
+		StartCoroutine (MoveUp ());
+	}
+
+	public void runMoveLeft() {
+		StartCoroutine (MoveLeft ());
+	}
+
+	public void runMoveRight() {
+		StartCoroutine (MoveRight ());
+	}
+
+
+	public void runMoveDown() {
+		StartCoroutine (MoveDown ());
+	}
 }

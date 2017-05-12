@@ -75,5 +75,9 @@ public class GameManager : MonoBehaviour {
 		return allHasMove; 
 	}
 
+	public void ResetGame() {
+		SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
+	}
+
 	
 }
