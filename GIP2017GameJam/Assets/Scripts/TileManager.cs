@@ -145,13 +145,18 @@ public class TileManager : MonoBehaviour {
 			relic.transform.SetParent (tileArray [i, j].transform);
 		}
 =======*/
-
-		tileArray [i, j] = Instantiate (tilePrefab, new Vector3 (-tileSize * j, -tileSize * i, 0), Quaternion.Euler (0.0f, 0.0f, 0.0f));
+        tileArray [i, j] = Instantiate (tilePrefab, new Vector3 (-tileSize * j, -tileSize * i, 0), Quaternion.Euler (0.0f, 0.0f, 0.0f));
 		tileArray [i, j].GetComponent<Tile>().Initialize(i, j, type, rotation);
 		tileArray [i, j].transform.localScale = new Vector3 (-1, 1, 1);
 		tileArray [i, j].name = "Tile X=" + i + " Y=" + j;
-//>>>>>>> origin/add_pivot_update_update
-	}
+        
+        if (type == 5)
+        {
+            GameObject relic = Instantiate(relicPrefab, new Vector3(-tileSize * j, -tileSize * i - 0.25f, 0), Quaternion.identity);
+            relic.transform.SetParent(tileArray[i, j].transform);
+        }
+        //>>>>>>> origin/add_pivot_update_update
+    }
 
     private void InitializePivots()
     {

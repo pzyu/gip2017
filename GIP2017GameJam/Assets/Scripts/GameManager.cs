@@ -146,7 +146,7 @@ public class GameManager : MonoBehaviour {
 
 			// Retrace back steps to find the first move to take (enemy AI)
 			// WARNING: 5x5 ONLY. REWRITE WHEN GENERALIZING
-			while (true) {
+			/*while (true) {
 
 				print ("YO " + targetX + " " + targetY + "N:" + tileManager.getTileArray () [targetX, targetY].GetComponent<Tile> ().canMoveN () + 
 					"E:" + tileManager.getTileArray () [targetX, targetY].GetComponent<Tile> ().canMoveE () + 
@@ -157,7 +157,7 @@ public class GameManager : MonoBehaviour {
 					
 				//} else if (
 
-			}
+			}*/
 		}
 		print ("Visited: " + origin.getX () + " " + origin.getY ());
 		visited [origin.getX(), origin.getY()] = true;

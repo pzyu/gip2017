@@ -150,7 +150,7 @@ public class Tile : MonoBehaviour {
 				rotation -= 360;
 			to = Quaternion.Euler (0.0f, 0.0f, rotation);
 		}
-		updatePaths ();
+		//updatePaths ();
         //audioSource.Play();
     }
 

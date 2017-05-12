@@ -45,7 +45,7 @@ public class CameraScript : MonoBehaviour
 			tileManager.RotateSelection();
 		}*/
 
-		// Right mouse click
+		/*// Right mouse click
 		if (Input.GetMouseButtonDown(1))
 		{
 			RaycastHit hit;
@@ -77,7 +77,7 @@ public class CameraScript : MonoBehaviour
                     selectedPivot.RotateRight();
                 }
             }
-		}
+		}*/
 
         // Left mouse click
         if (Input.GetMouseButtonDown(0))
