@@ -38,8 +38,10 @@ public class GameManager : MonoBehaviour {
 	void checkForRelic() {
 		Tile playerTile = GetPlayerTile (); 
 		if (playerTile.transform.childCount > 1) {
-			Debug.Log ("HI");
-		}
+			//Debug.Log ("HI");
+            Transform child = playerTile.transform.GetChild(1);
+            Destroy(child.gameObject);
+        }
 	}
 
 	void FindEnemyList() {
