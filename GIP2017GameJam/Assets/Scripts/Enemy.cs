@@ -12,17 +12,24 @@ public class Enemy : MonoBehaviour {
 	public bool canMove;
 	public float moveDelay = 0.5f;
 	private IEnumerator moveCoroutine;
-	private TileManager tileManager; 
+	private TileManager tileManager;
 
-	// Use this for initialization
-	void Start () {
+    private Vector3 targetPos;
+    private float speed = 1000.0f;
+    private AudioSource audioSource;
+
+    // Use this for initialization
+    void Start () {
 		canMove = false; 
 		tileManager = GameObject.Find ("TileManager").GetComponent<TileManager> ();
 		Vector3 startingPosition = tileManager.getTilePosition(x,y);
 		transform.position = new Vector3 (startingPosition.x, startingPosition.y, transform.position.z);
 		tileSize = tileManager.getTileSize ();
 		updateCurrentTile (x, y);
-	}
+        targetPos = transform.position;
+
+        audioSource = GetComponent<AudioSource>();
+    }
 
 
 	// Update is called once per frame
@@ -47,7 +54,8 @@ public class Enemy : MonoBehaviour {
 				StartCoroutine (moveCoroutine);
 			}
 		}
-	}
+        transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * 0.01f * Time.deltaTime);
+    }
 
 	IEnumerator MoveUp() {
 		if (y > 0 || ((x == 0) && (y == 0))) {
@@ -55,9 +63,16 @@ public class Enemy : MonoBehaviour {
 			print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3(0.0f,tileSize,0.0f); 
 			print (targetPosition);
-			transform.Translate (0.0f, tileSize, 0.0f);
-			updateCurrentTile (x, y);
-			yield return new WaitForSeconds(moveDelay); 
+            //transform.Translate (0.0f, tileSize, 0.0f);
+            targetPos = targetPosition;
+            updateCurrentTile (x, y);
+            if (audioSource == null)
+            {
+                audioSource = GetComponent<AudioSource>();
+            }
+
+            audioSource.Play();
+            yield return new WaitForSeconds(moveDelay); 
 		}
 	}
 
@@ -66,9 +81,16 @@ public class Enemy : MonoBehaviour {
 			y += 1;  
 			print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3(0.0f,-1 *tileSize,0.0f);
-			transform.Translate (0.0f,-1 *tileSize,0.0f);
-			updateCurrentTile (x, y);
-			yield return new WaitForSeconds(moveDelay);
+            //transform.Translate (0.0f,-1 *tileSize,0.0f);
+            targetPos = targetPosition;
+            updateCurrentTile (x, y);
+            if (audioSource == null)
+            {
+                audioSource = GetComponent<AudioSource>();
+            }
+
+            audioSource.Play();
+            yield return new WaitForSeconds(moveDelay);
 		}
 	}
 
@@ -77,9 +99,16 @@ public class Enemy : MonoBehaviour {
 			x += 1;
 			print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3 (-tileSize, 0.0f, 0.0f);
-			transform.Translate (-tileSize, 0.0f, 0.0f);
-			updateCurrentTile (x, y);
-			yield return new WaitForSeconds(moveDelay);
+            //transform.Translate (-tileSize, 0.0f, 0.0f);
+            targetPos = targetPosition;
+            updateCurrentTile (x, y);
+            if (audioSource == null)
+            {
+                audioSource = GetComponent<AudioSource>();
+            }
+
+            audioSource.Play();
+            yield return new WaitForSeconds(moveDelay);
 		}
 	}
 
@@ -88,16 +117,23 @@ public class Enemy : MonoBehaviour {
 			x -= 1; 
 			//print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3 ( tileSize, 0.0f, 0.0f);
-			transform.Translate (tileSize, 0.0f, 0.0f);
-			updateCurrentTile (x, y);
-			yield return new WaitForSeconds(moveDelay);
+            //transform.Translate (tileSize, 0.0f, 0.0f);
+            targetPos = targetPosition;
+            updateCurrentTile (x, y);
+            if (audioSource == null)
+            {
+                audioSource = GetComponent<AudioSource>();
+            }
+
+            audioSource.Play();
+            yield return new WaitForSeconds(moveDelay);
 		}
 	}
 
 	void updateCurrentTile(int x, int y) {
 		currentTile = tileManager.obtainTile (y, x);
         tileManager.enemyTile = currentTile;
-
+        
         tileManager.RefreshAllTiles();
 
         //currentTile.UpdateConnectedNeighbours ();

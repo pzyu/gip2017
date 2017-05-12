@@ -78,7 +78,20 @@ public class TileManager : MonoBehaviour {
         }
 
         Instantiate(tilePrefab, new Vector3(-tileSize * 0, -tileSize * -1, 0), Quaternion.Euler(0.0f, 0.0f, 0.0f));
-        Instantiate(tilePrefab, new Vector3(-tileSize * 4, -tileSize * 5, 0), Quaternion.Euler(0.0f, 0.0f, 0.0f));
+        Instantiate(tilePrefab, new Vector3(-tileSize * 1, -tileSize * -1, 0), Quaternion.Euler(0.0f, 0.0f, 0.0f));
+        Instantiate(tilePrefab, new Vector3(-tileSize * 2, -tileSize * -1, 0), Quaternion.Euler(0.0f, 0.0f, 0.0f));
+        Instantiate(tilePrefab, new Vector3(-tileSize * 3, -tileSize * -1, 0), Quaternion.Euler(0.0f, 0.0f, 0.0f));
+        Instantiate(tilePrefab, new Vector3(-tileSize * 4, -tileSize * -1, 0), Quaternion.Euler(0.0f, 0.0f, 0.0f));
+
+
+        Instantiate(tilePrefab, new Vector3(-tileSize * 0, -tileSize * 5, 0), Quaternion.Euler(0.0f, 0.0f, 0.0f));
+        Instantiate(tilePrefab, new Vector3(-tileSize * 1, -tileSize * 5, 0), Quaternion.Euler(0.0f, 0.0f, 0.0f));
+        Instantiate(tilePrefab, new Vector3(-tileSize * 2, -tileSize * 5, 0), Quaternion.Euler(0.0f, 0.0f, 0.0f));
+        Instantiate(tilePrefab, new Vector3(-tileSize * 3, -tileSize * 5, 0), Quaternion.Euler(0.0f, 0.0f, 0.0f));
+        GameObject end = Instantiate(tilePrefab, new Vector3(-tileSize * 4, -tileSize * 5, 0), Quaternion.Euler(0.0f, 0.0f, 0.0f));
+        end.transform.localScale = new Vector3(1, -1);
+        end.GetComponent<Tile>().SetType(Tile.TYPE.DEAD);
+
         //InstantiateTile(4, 5, 2);
 
         /*

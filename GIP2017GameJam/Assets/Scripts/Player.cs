@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour {
 	//initial player Position;
@@ -12,7 +13,9 @@ public class Player : MonoBehaviour {
 	public float tileSize = 5.0f; 
 	public bool canMove;
 	private IEnumerator moveCoroutine;
-	private TileManager tileManager; 
+	private TileManager tileManager;
+
+    private AudioSource audioSource;
 
 	// Use this for initialization
 	void Start () {
@@ -23,11 +26,13 @@ public class Player : MonoBehaviour {
 		tileSize = tileManager.getTileSize ();
 		updateCurrentTile (x, y);
         // Update connected neighbours
-	}
+
+        audioSource = GetComponent<AudioSource>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
-		if (canMove) {
+		if (canMove || !canMove) {
 			moveCoroutine = null; 
 			if (Input.GetKeyDown (KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) {
 				moveCoroutine = MoveUp (); 
@@ -53,25 +58,38 @@ public class Player : MonoBehaviour {
 			print (targetPosition);
 			transform.Translate (0.0f, tileSize, 0.0f);
 			updateCurrentTile (x, y);
-			canMove = false; 
+			canMove = false;
+            if (audioSource == null)
+            {
+                audioSource = GetComponent<AudioSource>();
+            }
+
+            audioSource.Play();
             yield return new WaitForSeconds(0.2f); 
 		}
 	}
 
 	IEnumerator MoveDown() {
-        if (x == TileManager.rows && y == TileManager.rows)
+        if (x == TileManager.rows - 1 && y == TileManager.rows - 1)
         {
             Debug.Log("Win!");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
-		if (currentTile.canMoveS() && (y < TileManager.rows || ((x == TileManager.cols) && (y == TileManager.rows)))) {
+        if (currentTile.canMoveS() && (y < TileManager.rows || ((x == TileManager.cols) && (y == TileManager.rows)))) {
 			y += 1;  
 			//print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3(0.0f,-1 *tileSize,0.0f);
 			transform.Translate (0.0f,-1 *tileSize,0.0f);
 			updateCurrentTile (x, y);
-			canMove = false; 
-			yield return new WaitForSeconds(0.2f);
+			canMove = false;
+            if (audioSource == null)
+            {
+                audioSource = GetComponent<AudioSource>();
+            }
+
+            audioSource.Play();
+            yield return new WaitForSeconds(0.2f);
 		}
 	}
 
@@ -82,8 +100,14 @@ public class Player : MonoBehaviour {
 			Vector3 targetPosition = transform.position + new Vector3 (-tileSize, 0.0f, 0.0f);
 			transform.Translate (-tileSize, 0.0f, 0.0f);
 			updateCurrentTile (x, y);
-			canMove = false; 
-			yield return new WaitForSeconds(0.2f);
+			canMove = false;
+            if (audioSource == null)
+            {
+                audioSource = GetComponent<AudioSource>();
+            }
+
+            audioSource.Play();
+            yield return new WaitForSeconds(0.2f);
 		}
 	}
 
@@ -94,16 +118,28 @@ public class Player : MonoBehaviour {
 			Vector3 targetPosition = transform.position + new Vector3 ( tileSize, 0.0f, 0.0f);
 			transform.Translate (tileSize, 0.0f, 0.0f);
 			updateCurrentTile (x, y);
-			canMove = false; 
-			yield return new WaitForSeconds(0.2f);
+			canMove = false;
+            if (audioSource == null)
+            {
+                audioSource = GetComponent<AudioSource>();
+            }
+
+            audioSource.Play();
+            yield return new WaitForSeconds(0.2f);
 		}
 	}
 
 	void updateCurrentTile(int x, int y) {
 		currentTile = tileManager.obtainTile (y, x);
         tileManager.playerTile = currentTile;
-		//currentTile.UpdateConnectedNeighbours ();
-		//currentTile.UpdateAllNeighbours ();
+        
+        //if (audioSource == null)
+        //{
+        //    audioSource = GetComponent<AudioSource>();
+        //}
+        //audioSource.Play();
+        //currentTile.UpdateConnectedNeighbours ();
+        //currentTile.UpdateAllNeighbours ();
 
 
         tileManager.RefreshAllTiles();
@@ -116,15 +152,15 @@ public class Player : MonoBehaviour {
 	}
 
 	public void runMoveLeft() {
-		StartCoroutine (MoveLeft ());
+        StartCoroutine (MoveLeft ());
 	}
 
 	public void runMoveRight() {
-		StartCoroutine (MoveRight ());
+        StartCoroutine (MoveRight ());
 	}
 
 
 	public void runMoveDown() {
-		StartCoroutine (MoveDown ());
+        StartCoroutine (MoveDown ());
 	}
 }

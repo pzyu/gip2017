@@ -85,7 +85,7 @@ public class Tile : MonoBehaviour {
     }
 
     // Sets type in a less cryptic manner
-    void SetType(TYPE type) {
+    public void SetType(TYPE type) {
         tileType = type;
         //Debug.Log("Current sprite: " + sr);
         this.GetComponent<SpriteRenderer>().sprite = spriteArray[(int)type];

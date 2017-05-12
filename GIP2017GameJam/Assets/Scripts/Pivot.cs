@@ -12,6 +12,9 @@ public class Pivot : MonoBehaviour {
     public GameObject test1, test2, test3, test4;
     public int i, j;
 
+    private float timeStamp;
+    private float coolDownPeriodInSeconds = 0.5f;
+
     // Use this for initialization
     void Start () {
         tileManager = GameObject.Find("TileManager").GetComponent<TileManager>();
@@ -37,13 +40,22 @@ public class Pivot : MonoBehaviour {
 
     public void RotateLeft()
     {
-        tileManager.RotateLeft(j, i);
-        audioSource.Play();
+        // Check cooldown
+        if (timeStamp <= Time.time)
+        {
+            timeStamp = Time.time + coolDownPeriodInSeconds;
+            tileManager.RotateLeft(j, i);
+            audioSource.Play();
+        }
     }
 
     public void RotateRight()
     {
-        tileManager.RotateRight(j, i);
-        audioSource.Play();
+        if (timeStamp <= Time.time)
+        {
+            timeStamp = Time.time + coolDownPeriodInSeconds;
+            tileManager.RotateRight(j, i);
+            audioSource.Play();
+        }
     }
 }
