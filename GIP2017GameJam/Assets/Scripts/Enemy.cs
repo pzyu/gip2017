@@ -15,7 +15,7 @@ public class Enemy : MonoBehaviour {
 	private TileManager tileManager;
 
     private Vector3 targetPos;
-    private float speed = 1000.0f;
+    private float speed = 2000.0f;
     private AudioSource audioSource;
 
     // Use this for initialization

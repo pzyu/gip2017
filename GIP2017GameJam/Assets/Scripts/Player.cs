@@ -18,13 +18,19 @@ public class Player : MonoBehaviour {
 
     private AudioSource audioSource;
 
-	// Use this for initialization
-	void Start () {
+    private Vector3 targetPos;
+    private float speed = 2000.0f;
+    private bool isStart = false;
+
+    // Use this for initialization
+    void Start () {
 		canMove = true;
 		tileManager = GameObject.Find ("TileManager").GetComponent<TileManager> ();
 		Vector3 startingPosition = tileManager.getFirstTilePosition();
+        targetPos = tileManager.getFirstTilePosition();
 		transform.position = new Vector3 (startingPosition.x, startingPosition.y, transform.position.z);
 		tileSize = tileManager.getTileSize ();
+        isStart = true;
 		updateCurrentTile (x, y);
         // Update connected neighbours
 
@@ -48,8 +54,11 @@ public class Player : MonoBehaviour {
 			if (moveCoroutine != null) {
 				StartCoroutine (moveCoroutine);
 			}
+
 		}
-	}
+
+        transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * 0.01f * Time.deltaTime);
+    }
 
 	IEnumerator MoveUp() {
 		if (currentTile.canMoveN() && (y > 0 || ((x == 0) && (y == 0)))) {
@@ -57,8 +66,9 @@ public class Player : MonoBehaviour {
 			//print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3(0.0f,tileSize,0.0f); 
 			print (targetPosition);
-			transform.Translate (0.0f, tileSize, 0.0f);
-			updateCurrentTile (x, y);
+			//transform.Translate (0.0f, tileSize, 0.0f);
+            targetPos = targetPosition;
+            updateCurrentTile (x, y);
 			canMove = false;
             if (audioSource == null)
             {
@@ -81,14 +91,14 @@ public class Player : MonoBehaviour {
 			y += 1;  
 			//print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3(0.0f,-1 *tileSize,0.0f);
-			transform.Translate (0.0f,-1 *tileSize,0.0f);
+			//transform.Translate (0.0f,-1 *tileSize,0.0f);
 			updateCurrentTile (x, y);
 			canMove = false;
             if (audioSource == null)
             {
                 audioSource = GetComponent<AudioSource>();
             }
-
+            targetPos = targetPosition;
             audioSource.Play();
             yield return new WaitForSeconds(0.2f);
 		}
@@ -99,14 +109,14 @@ public class Player : MonoBehaviour {
 			x += 1;
 			//print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3 (-tileSize, 0.0f, 0.0f);
-			transform.Translate (-tileSize, 0.0f, 0.0f);
+			//transform.Translate (-tileSize, 0.0f, 0.0f);
 			updateCurrentTile (x, y);
 			canMove = false;
             if (audioSource == null)
             {
                 audioSource = GetComponent<AudioSource>();
             }
-
+            targetPos = targetPosition;
             audioSource.Play();
             yield return new WaitForSeconds(0.2f);
 		}
@@ -117,14 +127,14 @@ public class Player : MonoBehaviour {
 			x -= 1; 
 			//print (x + ", " + y);
 			Vector3 targetPosition = transform.position + new Vector3 ( tileSize, 0.0f, 0.0f);
-			transform.Translate (tileSize, 0.0f, 0.0f);
+			//transform.Translate (tileSize, 0.0f, 0.0f);
 			updateCurrentTile (x, y);
 			canMove = false;
             if (audioSource == null)
             {
                 audioSource = GetComponent<AudioSource>();
             }
-
+            targetPos = targetPosition;
             audioSource.Play();
             yield return new WaitForSeconds(0.2f);
 		}

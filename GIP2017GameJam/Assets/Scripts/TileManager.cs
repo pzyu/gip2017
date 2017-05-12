@@ -78,7 +78,9 @@ public class TileManager : MonoBehaviour {
             }
         }
 
-        Instantiate(tilePrefab, new Vector3(-tileSize * 0, -tileSize * -1, 0), Quaternion.Euler(0.0f, 0.0f, 0.0f));
+        GameObject start = Instantiate(tilePrefab, new Vector3(-tileSize * 0, -tileSize * -1, 0), Quaternion.Euler(0.0f, 0.0f, 0.0f));
+        //start.GetComponent<Tile>().SetType(Tile.TYPE.DEAD);
+
         Instantiate(tilePrefab, new Vector3(-tileSize * 1, -tileSize * -1, 0), Quaternion.Euler(0.0f, 0.0f, 0.0f));
         Instantiate(tilePrefab, new Vector3(-tileSize * 2, -tileSize * -1, 0), Quaternion.Euler(0.0f, 0.0f, 0.0f));
         Instantiate(tilePrefab, new Vector3(-tileSize * 3, -tileSize * -1, 0), Quaternion.Euler(0.0f, 0.0f, 0.0f));
