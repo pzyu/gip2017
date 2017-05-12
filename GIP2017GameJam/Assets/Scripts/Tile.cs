@@ -13,8 +13,13 @@ public class Tile : MonoBehaviour {
     private Vector3 targetPos;
     private float speed = 1000.0f;
 
+	public bool hasNorthPath;
+	public bool hasSouthPath;
+	public bool hasEastPath;
+	public bool hasWestPath;
+
 	public bool isSelected;
-    private AudioSource audioSource;
+    public AudioSource audioSource;
 
     public enum TYPE {
         BLANK,
@@ -36,7 +41,7 @@ public class Tile : MonoBehaviour {
     private TextMesh debugText;
     
     // Constructor
-    public void Initialize (int x, int y, int type, int rotation) {
+    public void Initialize (int x, int y, int type, int rot) {
         debugText = transform.GetChild(0).GetComponent<TextMesh>();
         debugText.text = "X: " + x + " Y: " + y;
 
@@ -45,26 +50,11 @@ public class Tile : MonoBehaviour {
         //Debug.Log("Initializing new tile: " + x + " " + y + " " + (TYPE)type);
         this.x = x;
         this.y = y;
-		this.to = Quaternion.Euler (0.0f, 0.0f, rotation * 90);
-		SetType((TYPE)type);
+		this.to = Quaternion.Euler (0.0f, 0.0f, rot * 90);
+		this.rotation = rot * 90;
 
-		switch (rotation) {
-			case 0:
-				break; // 12o-clock
-			case 1:
-				RotateLeft(orientation); // 9o-clock
-				break;
-			case 2:
-				RotateLeft(orientation); // 6o-clock
-				RotateLeft(orientation);
-				break;
-			case 3:
-				RotateRight(orientation); // 3-oclock
-				break;
-			default:
-				Debug.Log("Invalid orientation. Must be 0 to 3");
-				break;
-		}
+		SetType((TYPE)type);
+		updatePaths ();
 
         sr = GetComponent<SpriteRenderer>();
         //Debug.Log(sr);
@@ -84,6 +74,13 @@ public class Tile : MonoBehaviour {
         transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * 0.005f * Time.deltaTime);
     }
 
+	void updatePaths() {
+		hasNorthPath = (orientation & 0xC0) == 0xC0;
+		hasEastPath = (orientation & 0x30) == 0x30;
+		hasSouthPath = (orientation & 0x0C) == 0x0C;
+		hasWestPath = (orientation & 0x03) == 0x03;
+	}
+
     // Sets type in a less cryptic manner
     void SetType(TYPE type) {
         tileType = type;
@@ -101,10 +98,10 @@ public class Tile : MonoBehaviour {
                 orientation = 0xFF; //11111111
                 break;
             case TYPE.T:
-                orientation = 0x3F; //00111111
+				orientation = 0x3F; //00111111
                 break;
             case TYPE.CORNER:
-                orientation = 0x0F; //11110000
+				orientation = 0xF0; //11110000
                 break;
             case TYPE.DEAD:
 				orientation = 0xC0; //11000000
@@ -115,43 +112,66 @@ public class Tile : MonoBehaviour {
         }
     }
 
-    int GetBit(byte b, int bitNumber) {
-        return (b & (1 << bitNumber)) != 0 ? 1 : 0;
-    }
-
 	// Updates the byte representation of the tile type
 	// according to its orientation
 	// Anti-clockwise
-	void RotateLeft(byte b) {
-        byte mask = 0xff;
-        orientation = (byte)(((b << 2) | (b >> 6)) & mask);
+	void RotateLeft(byte b, bool animate) {
+		bool temp = hasNorthPath;
 
-		rotation -= 90;
-		to = Quaternion.Euler (0.0f, 0.0f, rotation);
+		hasNorthPath = hasEastPath;
+		hasEastPath = hasSouthPath;
+		hasSouthPath = hasWestPath;
+		hasWestPath = temp;
 
-        audioSource.Play();
+		if (animate) {
+			rotation -= 90;
+			if (rotation < 0)
+				rotation += 360;
+			to = Quaternion.Euler (0.0f, 0.0f, rotation);
+		}
+		//updatePaths ();
+        //audioSource.Play();
     }
 
 	// Updates the byte representation of the tile type
 	// according to its orientation
 	// Clockwise
-	void RotateRight(byte b) {
-        byte mask = 0xff;
-        orientation = (byte)(((b >> 2) | (b << 6)) & mask);
-        
-		rotation += 90;
-		to = Quaternion.Euler (0.0f, 0.0f, rotation);
+	void RotateRight(byte b, bool animate) {
+		bool temp = hasNorthPath;
 
-        audioSource.Play();
+		hasNorthPath = hasWestPath;
+		hasWestPath = hasSouthPath;
+		hasSouthPath = hasEastPath;
+		hasEastPath = temp;
+
+		if (animate) {
+			rotation += 90;
+			if (rotation >= 360)
+				rotation -= 360;
+			to = Quaternion.Euler (0.0f, 0.0f, rotation);
+		}
+		updatePaths ();
+        //audioSource.Play();
     }
 
-    void PrintByte(byte b) {
-        string byteToPrint = "";
-        for (int i = 7; i >= 0; i--) {
-            byteToPrint += GetBit(b, i).ToString();
-        }
-        Debug.Log(byteToPrint);
-    }
+	void RotateAround(byte b, bool animate) {
+		bool temp = hasNorthPath;
+
+		hasNorthPath = hasSouthPath;
+		hasSouthPath = temp;
+
+		temp = hasEastPath;
+
+		hasEastPath = hasWestPath;
+		hasWestPath = temp;
+
+		if (animate) {
+			rotation += 180;
+			if (rotation >= 360)
+				rotation -= 360;
+			to = Quaternion.Euler (0.0f, 0.0f, rotation);
+		}
+	}
 
 	// Get X coordinate of Tile (position)
     public int getX() {
@@ -177,31 +197,7 @@ public class Tile : MonoBehaviour {
     {
         targetPos = target;
     }
-
-	// Returns true if there is a path in this direction
-    private bool getN() {
-        byte mask = 0xC0;
-        return (orientation & mask) != 0;
-    }
-
-	// Returns true if there is a path in this direction
-	private bool getE() {
-        byte mask = 0x30;
-        return (orientation & mask) != 0;
-    }
-
-	// Returns true if there is a path in this direction
-	private bool getS() {
-        byte mask = 0x0C;
-        return (orientation & mask) != 0;
-    }
-
-	// Returns true if there is a path in this direction
-	private bool getW() {
-        byte mask = 0x03;
-        return (orientation & mask) != 0;
-    }
-
+		
     TYPE getType() {
         return tileType;
     }
@@ -219,10 +215,10 @@ public class Tile : MonoBehaviour {
 	}
 
 	public void UpdateConnectedNeighbours() {
-		connectedNeighbours[3] = getN() && tileNeighbours[3] != null && tileNeighbours[3].getS();
-		connectedNeighbours[2] = getE() && tileNeighbours[2] != null && tileNeighbours[2].getW();
-		connectedNeighbours[1] = getS() && tileNeighbours[1] != null && tileNeighbours[1].getN();
-		connectedNeighbours[0] = getW() && tileNeighbours[0] != null && tileNeighbours[0].getE();
+		connectedNeighbours[3] = hasNorthPath && tileNeighbours[3] != null && tileNeighbours[3].hasSouthPath;
+		connectedNeighbours[2] = hasEastPath && tileNeighbours[2] != null && tileNeighbours[2].hasWestPath;
+		connectedNeighbours[1] = hasSouthPath && tileNeighbours[1] != null && tileNeighbours[1].hasNorthPath;
+		connectedNeighbours[0] = hasWestPath && tileNeighbours[0] != null && tileNeighbours[0].hasEastPath;
 	}
 
 	public void UpdateAllNeighbours() {
@@ -233,44 +229,46 @@ public class Tile : MonoBehaviour {
 		}
 	}
 
+	public bool[] getConnectedNeighbours() {
+		return connectedNeighbours;
+	}
+
 	public bool canMoveN() {
-		return connectedNeighbours[3];
+		return hasNorthPath && tileNeighbours [3] != null && tileNeighbours [3].hasSouthPath;
 	}
 
 	public bool canMoveE() {
-		return connectedNeighbours[2];
+		return hasEastPath && tileNeighbours[2] != null && tileNeighbours[2].hasWestPath;
 	}
 
 	public bool canMoveS() {
-		return connectedNeighbours[1];
+		return hasSouthPath && tileNeighbours[1] != null && tileNeighbours[1].hasNorthPath;
 	}
 
 	public bool canMoveW() {
-		return connectedNeighbours[0];
+		return hasWestPath && tileNeighbours[0] != null && tileNeighbours[0].hasEastPath;
 	}
 
 	private void OnMouseDown() {
-		//RotateRight(orientation);
-		//UpdateConnectedNeighbours ();
-		//UpdateAllNeighbours ();
     }
 
 	public void ChooseTile() {
-		RotateRight(orientation);
+		RotateRight(orientation, true);
 		UpdateConnectedNeighbours ();
 		UpdateAllNeighbours ();
+		printTile ();
 	}
 
     public void RotateRightAndUpdate()
     {
-        RotateRight(orientation);
+        RotateRight(orientation, true);
         UpdateConnectedNeighbours();
         UpdateAllNeighbours();
     }
 
     public void RotateLeftAndUpdate()
     {
-        RotateLeft(orientation);
+        RotateLeft(orientation, true);
         UpdateConnectedNeighbours();
         UpdateAllNeighbours();
     }
@@ -288,7 +286,7 @@ public class Tile : MonoBehaviour {
 	}
 
 	public void printTile() {
-		Debug.Log ("X: " + x + " Y: " + y + " N:" + getN() + "," + connectedNeighbours[0] + 
-			" E:" + getE() + "," + connectedNeighbours[1] + " S:" + getS() + "," + connectedNeighbours[2] + " W:" + getW() + "," + connectedNeighbours[3]);
+		Debug.Log ("X: " + x + " Y: " + y + " N:" + hasNorthPath + "," + connectedNeighbours[0] + 
+			" E:" + hasEastPath + "," + connectedNeighbours[1] + " S:" + hasSouthPath + "," + connectedNeighbours[2] + " W:" + hasWestPath + "," + connectedNeighbours[3]);
 	}
 }

@@ -53,6 +53,10 @@ public class TileManager : MonoBehaviour {
 		
 	}
 
+	public GameObject[,] getTileArray() {
+		return tileArray;
+	}
+
     // Reads text file and initializes it into charArray
     // TODO: Verify rows and cols with file
 	void InitializeCharArrayFromFile() {
@@ -115,8 +119,11 @@ public class TileManager : MonoBehaviour {
 
 	private void InstantiateTile(int i, int j, int type) {
 		int rotation = 0;
-		tileArray[i, j] = Instantiate(tilePrefab, new Vector3(-tileSize * j, -tileSize * i, 0), Quaternion.Euler(0.0f, 0.0f, rotation * 90));
-		tileArray[i, j].GetComponent<Tile>().Initialize(i, j, type, rotation);
+
+		tileArray [i, j] = Instantiate (tilePrefab, new Vector3 (-tileSize * j, -tileSize * i, 0), Quaternion.Euler (0.0f, 0.0f, 0.0f));
+		tileArray [i, j].GetComponent<Tile>().Initialize(i, j, type, rotation);
+		tileArray [i, j].transform.localScale = new Vector3 (-1, 1, 1);
+		tileArray [i, j].name = "Tile X=" + i + " Y=" + j;
 	}
 
     private void InitializePivots()
@@ -386,7 +393,9 @@ public class TileManager : MonoBehaviour {
         {
             for (int b = 0; b < cols; b++)
             {
-                tileArray[a, b].GetComponent<Tile>().UpdateTileNeighbours(getTileNeighbours(tileArray[a, b].GetComponent<Tile>()));
+                tileArray[a, b].GetComponent<Tile>().
+				UpdateTileNeighbours(getTileNeighbours(tileArray[a, b].GetComponent<Tile>()));
+				tileArray[a, b].GetComponent<Tile> ().UpdateConnectedNeighbours ();
             }
         }
     }
