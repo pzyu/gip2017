@@ -7,6 +7,7 @@ public class Player : MonoBehaviour {
 	//initial player Position;
 	public int x = 0; 
 	public int y = 0;
+	public int relicCollected = 0; 
 	public Tile currentTile; 
 
 	// tile size to help with translation; 

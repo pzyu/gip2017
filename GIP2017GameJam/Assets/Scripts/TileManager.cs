@@ -22,6 +22,7 @@ public class TileManager : MonoBehaviour {
 
     public GameObject tilePrefab;
     public GameObject pivotPrefab;
+	public GameObject relicPrefab; 
 
     private GameObject[,] pivotArray;
 
@@ -130,6 +131,11 @@ public class TileManager : MonoBehaviour {
 		int rotation = 0;
 		tileArray[i, j] = Instantiate(tilePrefab, new Vector3(-tileSize * j, -tileSize * i, 0), Quaternion.Euler(0.0f, 0.0f, rotation * 90));
 		tileArray[i, j].GetComponent<Tile>().Initialize(i, j, type, rotation);
+
+		if (type == 5) {
+			GameObject relic = Instantiate(relicPrefab, new Vector3(-tileSize * j, -tileSize * i - 0.25f, 0), Quaternion.identity);
+			relic.transform.SetParent (tileArray [i, j].transform);
+		}
 	}
 
     private void InitializePivots()
@@ -459,15 +465,31 @@ public class TileManager : MonoBehaviour {
 			}
 		}
 
+		for (int z = 0; z < numRelics; z++) {
+			int locY = 0; 
+			int locX = 0; 
+			// find random path equals to 0 
+			while (path[locY,locX] != 0){
+				locY = Random.Range(0, rows);
+				locX = Random.Range (0, cols);	
+			}
+			// set to 5 
+			path[locY,locX] = 2; // random number to avoid being overwritten
+			Debug.Log("DEADEND IS HERE: " + locY + ", " + locX);
+		}
+
 		for (y = 0; y < rows; y++) {
 			for (x = 0; x < cols; x++) {
 				if (path [y, x] == 0) {
-					intArray [y, x] = tileDistribution[Random.Range(0, tileDistribution.Length)];
-				} else if ((y > 0 && y < rows - 1 && path[y - 1, x] == 1 && path[y + 1, x] == 1) ||
-					(x > 0 && x < cols - 1 && path[y, x - 1] == 1 && path[y, x + 1] == 1)) {
+					intArray [y, x] = tileDistribution [Random.Range (0, tileDistribution.Length)];
+				} else if ((y > 0 && y < rows - 1 && path [y - 1, x] == 1 && path [y + 1, x] == 1) ||
+				           (x > 0 && x < cols - 1 && path [y, x - 1] == 1 && path [y, x + 1] == 1)) {
 					// If 3 consecutive tiles are in a straight line 
 					// choose from PIPE / CROSS / T (1,2,3)
-					intArray[y, x] = Random.Range (1, 4);
+					intArray [y, x] = Random.Range (1, 4);
+				} else if (path [y, x] == 2) {
+					intArray [y, x] = 5; 	
+				
 				} else {
 					// Else choose from CORNER / CROSS / T (2,3,4)
 					intArray[y, x] = Random.Range (2, 5);

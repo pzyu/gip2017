@@ -107,7 +107,7 @@ public class Tile : MonoBehaviour {
                 orientation = 0x0F; //11110000
                 break;
             case TYPE.DEAD:
-				orientation = 0xC0; //11000000
+				orientation = 0x0C; //00001100
                 break;
             default:
                 Debug.Log("Invalid type");
